@@ -1,0 +1,1152 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on koala9527的博客</title><link>https://blog.tuwei.space/post/</link><description>Recent content in Posts on koala9527的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-Hans</language><lastBuildDate>Thu, 02 Mar 2023 20:54:10 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/post/index.xml" rel="self" type="application/rss+xml"/><item><title>Kplayer 24小时BiliBili直播推流 docker部署教程</title><link>https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/</link><pubDate>Thu, 02 Mar 2023 20:54:10 +0800</pubDate><guid>https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/</guid><description>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/2023-3-2-1677761236933.png" alt="Featured image of post Kplayer 24小时BiliBili直播推流 docker部署教程" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>看到张大妈网站有一个非常火的文章，分享如何使用docker 部署一个24小时直播推流的服务薅羊毛，正好有闲置的服务器，然后每天收益大概有1元钱，于是就想试一下。&lt;/p>
+&lt;h2 id="项目介绍">项目介绍&lt;/h2>
+&lt;p>项目地址：&lt;a class="link" href="https://github.com/bytelang/kplayer-go" target="_blank" rel="noopener"
+>bytelang/kplayer-go&lt;/a>&lt;/p>
+&lt;p>项目介绍看图
+&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img.png"
+width="886"
+height="767"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_hu5e4fcc949d2f3a829177780f809df23e_50697_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_hu5e4fcc949d2f3a829177780f809df23e_50697_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="115"
+data-flex-basis="277px"
+>&lt;/p>
+&lt;h2 id="部署">部署&lt;/h2>
+&lt;p>第一步准备docker 镜像&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">docker pull bytelang/kplayer:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="准备配置文件路径映射">准备配置文件路径映射&lt;/h2>
+&lt;p>准备工作，准备三个文件/文件夹映射&lt;br>
+1.配置文件映射&lt;br>
+2.播放资源的文件夹映射&lt;br>
+3.缓存目录的映射&lt;/p>
+&lt;p>我的服务器是Linux Centos系统，服务器叫宿主机。&lt;br>
+宿主机文件地址是需要自己自定义的&lt;/p>
+&lt;ul>
+&lt;li>宿主机播放资源文件地址(放了一些抖音视频)：/home/***/mp4&lt;/li>
+&lt;li>宿主机配置文件（稍后再说）：/home/***/kplayer/config.json&lt;/li>
+&lt;li>宿主机直播编码缓存文件地址 ：/home/***/kplayer/cache&lt;/li>
+&lt;/ul>
+&lt;p>容器映射的文件目录是固定的&lt;br>
+宿主机播放资源文件地址是根据config.json内容配置文件来定义的&lt;/p>
+&lt;ul>
+&lt;li>容器播放资源文件地址：/video&lt;/li>
+&lt;li>宿主机配置文件（必须固定的地址）：/kplayer/config.json&lt;/li>
+&lt;li>容器播放资源文件地址（必须固定的地址）：/kplayer/cache&lt;/li>
+&lt;/ul>
+&lt;h2 id="获取bilibili-直播推流地址">获取BiliBili 直播推流地址&lt;/h2>
+&lt;p>1.首页直播：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_1.png"
+width="1076"
+height="169"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_1_hu1409b81e6cd502045fdd2511a394ebc9_184652_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_1_hu1409b81e6cd502045fdd2511a394ebc9_184652_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="636"
+data-flex-basis="1528px"
+>&lt;/p>
+&lt;p>2.网页右侧开播设置：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_2.png"
+width="372"
+height="736"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_2_hua5d68031bef4da2c54dca2fadefd4efe_377606_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_2_hua5d68031bef4da2c54dca2fadefd4efe_377606_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="50"
+data-flex-basis="121px"
+>&lt;/p>
+&lt;p>3.选择分类，点击开播，前提是需要身份证和姓名实名认证：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_3.png"
+width="1227"
+height="823"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_3_huaec79a58912ecc4caba5c3caf16ff351_87991_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_3_huaec79a58912ecc4caba5c3caf16ff351_87991_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="149"
+data-flex-basis="357px"
+>&lt;/p>
+&lt;p>4.得到直播推流地址：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_4.png"
+width="797"
+height="374"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_4_hu422655f704384936add689f4709b2c8f_14665_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_4_hu422655f704384936add689f4709b2c8f_14665_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="213"
+data-flex-basis="511px"
+>&lt;/p>
+&lt;p>&lt;code>服务器地址&lt;/code> 拼接上 &lt;code>串流密钥&lt;/code> 就是推流的地址：
+&lt;code>rtmp://live-push.bilivideo.com/live-bvc/?streamname=live_******_******&amp;amp;key=**************&amp;amp;schedule=rtmp&amp;amp;pflag=1&lt;/code>&lt;/p>
+&lt;h2 id="configjson配置文件内容">config.json配置文件内容&lt;/h2>
+&lt;p>在宿主机/home/***/kplayer/config.json内容如下（把上面获取的推流地址替换到下面的配置文件中） ：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;version&amp;#34;: &amp;#34;2.0.0&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;resource&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;lists&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;/video/&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;extensions&amp;#34;: [&amp;#34;mp4&amp;#34;]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;output&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;lists&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;path&amp;#34;: &amp;#34;rtmp://live-push.bilivideo.com/live-bvc/?streamname=live_******_******&amp;amp;key=**************&amp;amp;schedule=rtmp&amp;amp;pflag=1&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;reconnect_internal&amp;#34;: 5
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;play&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;fill_strategy&amp;#34;: &amp;#34;ratio&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;skip_invalid_resource&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;cache_on&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;play_model&amp;#34;: &amp;#34;random&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>注意 &lt;code>['resource']['lists']&lt;/code> 的配置内容就是 容器内的播放资源文件地址&lt;/p>
+&lt;p>&lt;code>&amp;quot;cache_on&amp;quot;:true&lt;/code> 就是启用推流编码缓存，会生成缓存，命中缓存节约CPU资源&lt;/p>
+&lt;p>&lt;code>&amp;quot;play_model&amp;quot;: &amp;quot;random&amp;quot;&lt;/code> 就是在播放列表中随机播放&lt;/p>
+&lt;h2 id="启动运行">启动运行&lt;/h2>
+&lt;p>使用docker 运行容器 加上上面的文件目录映射就可以了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">docker run -td --name&lt;span class="o">=&lt;/span>kplayer -v /home/***/mp4:/video -v /home/***/kplayer/config.json:/kplayer/config.json -v /home/***/kplayer/cache:/kplayer/cache --restart&lt;span class="o">=&lt;/span>always bytelang/kplayer:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用&lt;code>docker logs kplayer&lt;/code>查看日志，看到下面的日志就表示成功了：
+&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_5.png"
+width="965"
+height="233"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_5_hu5e6460b4af65fd932334b2d0719049d6_30334_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_5_hu5e6460b4af65fd932334b2d0719049d6_30334_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_5.png"
+class="gallery-image"
+data-flex-grow="414"
+data-flex-basis="993px"
+>
+访问直播地址也正常直播了。&lt;/p></description></item><item><title>《把时间当作朋友》</title><link>https://blog.tuwei.space/p/%E6%8A%8A%E6%97%B6%E9%97%B4%E5%BD%93%E4%BD%9C%E6%9C%8B%E5%8F%8B/</link><pubDate>Fri, 03 Feb 2023 21:33:13 +0800</pubDate><guid>https://blog.tuwei.space/p/%E6%8A%8A%E6%97%B6%E9%97%B4%E5%BD%93%E4%BD%9C%E6%9C%8B%E5%8F%8B/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E6%8A%8A%E6%97%B6%E9%97%B4%E5%BD%93%E4%BD%9C%E6%9C%8B%E5%8F%8B/img_5.png" alt="Featured image of post 《把时间当作朋友》" />&lt;h1 id="0困境">0.困境&lt;/h1>
+&lt;ul>
+&lt;li>
+&lt;h2 id="1-问题">1 问题&lt;/h2>
+&lt;/li>
+&lt;/ul>
+&lt;p>完成任务都需要一定的时间，同时，任何任务都最好或者必须在某个特定的时间点之前完成，不管是否已经开始执行，最后期限都在不断的迫近，因为时间永不停歇&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;h2 id="2--慌乱">2 慌乱&lt;/h2>
+&lt;/li>
+&lt;/ul>
+&lt;p>“没时间了“，其可怕程度几乎无异于死亡。死亡本身并不可怕，面临死亡的过程才真正可怕。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;h2 id="3-解决">3 解决&lt;/h2>
+&lt;/li>
+&lt;/ul>
+&lt;p>我们无法管理时间，我们真正能够管理的，是我们自己，人很难接受与已有知识和经验相悖的信息或观念。问题出现在我们自己身上，解决问题的核心思想只有一个：一切都靠积累。深信积累的力量，时间就是你的朋友，否则，它就是你的敌人。&lt;/p>
+&lt;h1 id="一醒悟">一.醒悟&lt;/h1>
+&lt;ul>
+&lt;li>
+&lt;h2 id="1-谁是大脑的主人">1 谁是大脑的主人&lt;/h2>
+&lt;/li>
+&lt;/ul>
+&lt;p>我们竟然可以用自己的大脑控制自己的大脑~，做自己的主宰者，需要经过长期的思考，意识自己可以控制自己的大脑，不再让自己“跟着感觉走”，成为大脑的奴隶，而是翻身做大脑的主人。&lt;br>
+&lt;code>人所有的任何东西都可以被剥夺，唯独人性最后的自由---也就是在任何境遇中选择一己态度和生活方式的自由---不能被剥夺。&lt;/code>&lt;br>
+需要心智获得解放&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;h2 id="2-何谓心智">2 何谓心智&lt;/h2>
+&lt;/li>
+&lt;/ul>
+&lt;p>一个人的心智就是其过往获得的一切知识及经验的总和，心智一旦开启，就会不断自我积累，自我过滤，直至根深蒂固，人与人之间心智力量的差异，就是这样积累，最终天差地别。&lt;br>
+心智这东西“上不封顶，下午保底“&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;h2 id="3-案例">3 案例&lt;/h2>
+&lt;/li>
+&lt;/ul>
+&lt;p>有些认知，哪怕只是最简单的常识也需要亲身经历后才能真正体会，有的人经过了一些事情能自然而然地理解并相信”技多不压身“的道理。有的人会觉得”没学也没什么“,”不知道学它有很没用“,”现在学也来不及了“,或者后面感概”当初不懂事，要是学过就好了“。&lt;br>
+拒绝学习和接受学习都会慢慢融入心智，和过去一样做出同样的选择&lt;/p>
+&lt;h1 id="二现实">二.现实&lt;/h1>
+&lt;ul>
+&lt;li>
+&lt;h2 id="1-速成绝无可能">1 速成绝无可能&lt;/h2>
+&lt;/li>
+&lt;/ul>
+&lt;p>人人都想速成，”有些阶段是无法跨越的“。&lt;br>
+越是浮躁，就越是对自己的现状不满；越是对自己的现状不满，就越是浮躁&lt;br>
+一方面是自己的欲望无线，一方面是要完成的事情太多了，一方面是自我满意度的不断下降&amp;ndash;这就是人们总是不由自主的去期望速成的根源。出路肯定存在，但这出路只有一个起点&amp;ndash;接受现实。告诉自己有不足，我需要时间，我没办法一蹴而就。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;h2 id="2-交换才是硬道理">2 交换才是硬道理&lt;/h2>
+&lt;/li>
+&lt;/ul>
+&lt;p>想办法跳出恶性循环，我要什么我有什么，不要让欲望之火烧自己的时间和精力，”我要“的欲望从来不会消减，需要借助已经拥有的足够的努力和勤奋，花上一点时间换取自己想要的，不仅”我有“的更多，”我要“的也更容易获得。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;h2 id="3-完美永远不存在">3 完美永远不存在&lt;/h2>
+&lt;/li>
+&lt;/ul></description></item><item><title>记录一次使用docker 安装Alist插件 挂载本地存储和网盘</title><link>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/</link><pubDate>Thu, 02 Feb 2023 21:20:24 +0800</pubDate><guid>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_14.png" alt="Featured image of post 记录一次使用docker 安装Alist插件 挂载本地存储和网盘" />&lt;p>前篇文章记录了斐讯N1怎么安装frpc内网穿透，现在来继续折腾Alist插件,把本地存储和网盘集中到自己的搭建的Web服务中。&lt;/p>
+&lt;p>主要是看中了Alist颜值高和网盘挂载的功能。&lt;/p>
+&lt;h1 id="使用docker-安装-alist">使用Docker 安装 Alist&lt;/h1>
+&lt;p>N1盒子已经自带了Docker软件，接下来直接使用Docker安装Alist，注意映射的本地目录。&lt;/p>
+&lt;p>我自己想让Alist管理的本地文件夹是N1盒子插的一块硬盘特定的文件夹&lt;br>
+文件目录为：/sharedfolders/N1/alist&lt;br>
+官方的教程是把容器里面的alist运行配置映射到宿主机（alist容器内的配置文件路径：/opt/alist/data）&lt;br>
+我再添加一个目录映射专门把宿主机的文件映射到Alist容器内部，让Alist管理&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">docker run -d --restart&lt;span class="o">=&lt;/span>always -v /sharedfolders/N1/alist/config:/opt/alist/data -v /sharedfolders/N1/alist/data:/home -p 5244:5244 --name&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;alist&amp;#34;&lt;/span> xhofe/alist:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后在命令行运行&lt;code>docker exec -it alist ./alist -password&lt;/code>查看初始密码：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img.png"
+width="723"
+height="159"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_hu773a691f27ca10dc601086f0a4182979_11863_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_hu773a691f27ca10dc601086f0a4182979_11863_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="454"
+data-flex-basis="1091px"
+>&lt;/p>
+&lt;p>访问内网地址&lt;code>192.168.2.122:5244&lt;/code>进入alist的管理界面：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_1.png"
+width="1050"
+height="893"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_1_hu6a834248cd0ecff056c78e27a9f129ef_13225_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_1_hu6a834248cd0ecff056c78e27a9f129ef_13225_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="117"
+data-flex-basis="282px"
+>&lt;/p>
+&lt;p>一进来就会提示没有挂载，此时不着急，点击下方登录，使用上面的密码登录，用户名是：&lt;code>admin&lt;/code>&lt;/p>
+&lt;p>登录进入改下密码，然后设置储存：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_2.png"
+width="847"
+height="641"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_2_hu35a8c3ec33122e7a807c03ab26f42c58_18397_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_2_hu35a8c3ec33122e7a807c03ab26f42c58_18397_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="132"
+data-flex-basis="317px"
+>&lt;/p>
+&lt;p>添加本机存储：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_3.png"
+width="556"
+height="729"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_3_hub4fefe620d6561a584070095c29d2ca1_21180_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_3_hub4fefe620d6561a584070095c29d2ca1_21180_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="76"
+data-flex-basis="183px"
+>&lt;/p>
+&lt;p>挂载/home目录 ，根文件夹路径也是/home：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_7.png"
+width="504"
+height="906"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_7_hu7d428690dd2c53555920550bf61a2cc2_25430_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_7_hu7d428690dd2c53555920550bf61a2cc2_25430_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_7.png"
+class="gallery-image"
+data-flex-grow="55"
+data-flex-basis="133px"
+>&lt;/p>
+&lt;p>点击添加就可以了。再访问&lt;code>192.168.2.122:5244&lt;/code>&lt;/p>
+&lt;p>就看到挂载的本机存储了：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_4.png"
+width="1312"
+height="316"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_4_hu39588b26bf8708e0803a6d97ac77055d_8524_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_4_hu39588b26bf8708e0803a6d97ac77055d_8524_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="415"
+data-flex-basis="996px"
+>
+到现在基础功能就实现了&lt;/p>
+&lt;h1 id="尝试挂载网盘">尝试挂载网盘&lt;/h1>
+&lt;p>挂载天翼云盘尝试一下，相对比较简单&lt;/p>
+&lt;p>在管理-&amp;gt;储存-&amp;gt;添加：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_5.png"
+width="437"
+height="940"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_5_hue4ea531dc6307c86f7964da8831778ce_24926_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_5_hue4ea531dc6307c86f7964da8831778ce_24926_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_5.png"
+class="gallery-image"
+data-flex-grow="46"
+data-flex-basis="111px"
+>&lt;/p>
+&lt;p>挂载路径就是在访问Alist的时候此时添加的储存的名字&lt;/p>
+&lt;p>用户名就是天翼云的账号也就是手机号。密码也就是天翼云盘的登录密码&lt;/p>
+&lt;p>根文件夹ID就是在访问web端的天翼云盘的文件夹ID, &lt;code>-11&lt;/code>就是网盘的根目录：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_6.png"
+width="1282"
+height="429"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_6_hu01df3ca97a5c7a28e76bd1cf04080d46_24653_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_6_hu01df3ca97a5c7a28e76bd1cf04080d46_24653_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_6.png"
+class="gallery-image"
+data-flex-grow="298"
+data-flex-basis="717px"
+>&lt;/p>
+&lt;h1 id="最后效果设置密码">最后效果&amp;amp;设置密码&lt;/h1>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_12.png"
+width="774"
+height="373"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_12_hud54f07470190012631a481317093c46f_13858_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_12_hud54f07470190012631a481317093c46f_13858_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_12.png"
+class="gallery-image"
+data-flex-grow="207"
+data-flex-basis="498px"
+>
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_8.png"
+width="1258"
+height="345"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_8_hud01fad7b41e3916482e9791d3e17eabb_9344_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_8_hud01fad7b41e3916482e9791d3e17eabb_9344_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_8.png"
+class="gallery-image"
+data-flex-grow="364"
+data-flex-basis="875px"
+>&lt;/p>
+&lt;p>接下来尝试可以给特定的文件夹添加密码&lt;/p>
+&lt;p>在 在管理-&amp;gt;元信息-&amp;gt;添加：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_9.png"
+width="607"
+height="494"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_9_hu8b8ce4491cd3756c4ab226b4a82f148a_15961_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_9_hu8b8ce4491cd3756c4ab226b4a82f148a_15961_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_9.png"
+class="gallery-image"
+data-flex-grow="122"
+data-flex-basis="294px"
+>&lt;/p>
+&lt;p>设置目录和密码就可以了，推出登陆后访问这个文件夹就会提示输入密码：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_10.png"
+width="1214"
+height="309"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_10_hu7e2ef9d35aa9f172d238db9bec4b393b_10311_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_10_hu7e2ef9d35aa9f172d238db9bec4b393b_10311_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_10.png"
+class="gallery-image"
+data-flex-grow="392"
+data-flex-basis="942px"
+>&lt;/p>
+&lt;p>输入密码后还可以展示刚刚设置的文件夹说明：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_11.png"
+width="767"
+height="274"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_11_hud317d033da32f56ea5fae2a125204d94_12002_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_11_hud317d033da32f56ea5fae2a125204d94_12002_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_11.png"
+class="gallery-image"
+data-flex-grow="279"
+data-flex-basis="671px"
+>&lt;/p>
+&lt;p>后面我会把这这个Alist通过内网穿透使它能够在公网访问，然后尝试使用webdav挂载网盘到Windows，把网盘当作系统硬盘来使用&lt;/p></description></item><item><title>记录一次frp客户端安装</title><link>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/</link><pubDate>Wed, 01 Feb 2023 21:02:54 +0800</pubDate><guid>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/title.png" alt="Featured image of post 记录一次frp客户端安装" />&lt;p>记录一次frp客户端安装&lt;/p>
+&lt;p>最近是把老路由器换下来了，之前的使用的是路由器挂硬盘当Nas，换了新路由器没有USB接口，把之前的电视盒子斐讯N1拿出来了，刷了一个FastNas系统
+，但是没有Frp内网穿透功能，只有自己安装。&lt;/p>
+&lt;h2 id="下载解压">下载解压&lt;/h2>
+&lt;p>frp项目地址：https://github.com/fatedier/frp
+找到自己跟自己frp服务端匹配的版本 ，再确认N1的系统版本&lt;/p>
+&lt;p>下载对应的客户端：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">wget https://github.com/fatedier/frp/releases/download/v0.34.2/frp_0.34.2_linux_arm64.tar.gz
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>解压tar.gz文件命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">tar -zxvf frp_0.34.2_linux_arm64.tar.gz
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>cd 进入到解压后的文件夹找到客户端需要用的文件分别为：&lt;code>frpc.ini&lt;/code> 和 &lt;code>frpc&lt;/code>&lt;/p>
+&lt;p>首先编辑&lt;code>frpc.ini&lt;/code>配置文件连接服务端&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ini" data-lang="ini">&lt;span class="line">&lt;span class="cl">&lt;span class="k">[common]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">server_addr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">***.***.***.***&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">server_port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">7000&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">*****&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">[ssh]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">type&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">tcp&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">local_ip&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">127.0.0.1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">local_port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">22&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">remote_port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">37051&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>连接服务端只需要3个配置 ，地址，端口，密钥&lt;/p>
+&lt;p>[ssh]是frp客户端需要穿透出去的服务
+web服务是http服务的，基于tcp的可靠协议&lt;br>
+local_ip本地服务地址&lt;br>
+local_port本地服务的端口&lt;br>
+remote_port穿透映射到公网服务器的端口&lt;/p>
+&lt;p>然后把&lt;code>frpc.ini&lt;/code> 和 &lt;code>frpc&lt;/code>两个文件移动到自己设置的位置，尽量不要放到解压出来的文件夹，不然过了一段时间就会忘记会把它误删掉。&lt;/p>
+&lt;p>我把它们分别移动到了/usr/local/frp/frpc 和 /etc/frp/frpc.ini位置&lt;/p>
+&lt;p>然后使用系统自带的 sytemctl 服务管理功能 启动frpc服务并且开机自启&lt;/p>
+&lt;p>找到 sytemctl 配置文件夹 /lib/systemd/system 新建 frpc.service 文件输入一下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ini" data-lang="ini">&lt;span class="line">&lt;span class="cl">&lt;span class="k">[Unit]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">Description&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">frpc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">Wants&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">network-online.target&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">After&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">network.target network-online.target&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">Requires&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">network-online.target&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">[Service]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">ExecStart&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">/usr/local/frp/frpc -c /etc/frp/frpc.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">ExecStop&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">/bin/kill $MAINPID&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">Restart&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">always&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">RestartSec&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">StartLimitInterval&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">[Install]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">WantedBy&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">multi-user.target&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后执行&lt;code>systemctl start frpc&lt;/code> 启动frpc服务
+然后使用&lt;code>systemctl status frpc&lt;/code> 查看服务状态:
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img.png"
+width="1259"
+height="262"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_hue58d10d67f189e8c75eec270aa7f6dab_21582_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_hue58d10d67f189e8c75eec270aa7f6dab_21582_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="480"
+data-flex-basis="1153px"
+>
+最后执行&lt;code>systemctl enable frpc&lt;/code> 设置开机自启&lt;/p>
+&lt;h2 id="最后测试">最后测试&lt;/h2>
+&lt;p>使用公网IP，在frpc客户端配置的remote_port连接：
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_1.png"
+width="762"
+height="533"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_1_hu7d1c4624a7c1b23e5993970af83f9c95_23530_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_1_hu7d1c4624a7c1b23e5993970af83f9c95_23530_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="142"
+data-flex-basis="343px"
+>&lt;/p></description></item><item><title>制作自己的composer包，搭建satis私有仓库</title><link>https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/</link><pubDate>Mon, 30 Jan 2023 11:55:51 +0800</pubDate><guid>https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-title.jpg" alt="Featured image of post 制作自己的composer包，搭建satis私有仓库" />&lt;p>composer相当于PHP 包管理器,在日常工作中有很多可以复用的代码都可以制作私有composer包来进行分发，统一管理，特别是在公司内部一些新项目初始化需要使用一些公共的方法就不需要重复复制了，可以减少很多心智负担，使用composer命令就能下载项目的依赖包。&lt;/p>
+&lt;h1 id="前提">前提&lt;/h1>
+&lt;p>安装composer &lt;br>
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-version.png"
+width="379"
+height="58"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-version_hufdab7137f5cc0ff18fc1152456ab020f_2032_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-version_hufdab7137f5cc0ff18fc1152456ab020f_2032_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="653"
+data-flex-basis="1568px"
+>&lt;/p>
+&lt;p>安装Git&lt;br>
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-v.png"
+width="241"
+height="54"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-v_hub173a339e8ba13037a8c748952fba212_1674_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-v_hub173a339e8ba13037a8c748952fba212_1674_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="446"
+data-flex-basis="1071px"
+>&lt;/p>
+&lt;p>公网IP机器，域名解析，Docker&lt;/p>
+&lt;h1 id="制作composer包">制作composer包&lt;/h1>
+&lt;p>先找到一个空目录，执行composer 初始化命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">composer init
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后出现一连串的询问：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>1.This command will guide you through creating your composer.json config.`
+Package name (&lt;!-- raw HTML omitted -->/&lt;!-- raw HTML omitted -->) :&lt;/p>
+&lt;p>填写自己的包名,我填写的是：koala9527/composer-build&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>2.Description []:&lt;/p>
+&lt;p>需要填写这个包的描述信息，我填写的是：just test&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>3.Author [**** &lt;a class="link" href="mailto:koala9217@qq.com" >koala9217@qq.com&lt;/a>, n to skip]:&lt;/p>
+&lt;p>提示填写作者信息，可以直接跳过输入n&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>4.Minimum Stability []:&lt;/p>
+&lt;p>提示填写最小稳定版本，可输入内容为：stable, RC, beta, alpha, dev，稳定性依次从左到右从大到小，越左边越稳定bug越少，自己测试的包就输入：dev&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>5.Package Type (e.g. library, project, metapackage, composer-plugin)[]: library&lt;/p>
+&lt;p>提示填写项目类型&lt;/p>
+&lt;blockquote>
+&lt;p>library: 这是默认类型，它会简单地将文件复制到 vendor 目录。
+project: 这表示当前包是一个项目，而不是一个库。
+metapackage: 当一个空的包，包含依赖并且需要触发依赖的安装，这将不会对系统写入额外的文件。因此这种安装类型并不需要一个 dist 或 source。
+composer-plugin: 一个安装类型为 composer-plugin 的包，它有一个自定义安装类型，可以为其它包提供一个 installler。&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;/blockquote>
+&lt;p>这里就是填的默认类型&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>6.License[]:
+提示填写开源许可证
+参考下图：
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/License.png"
+width="1000"
+height="346"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/License_hu8e8f22298f4a737c8d177088a1866641_99153_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/License_hu8e8f22298f4a737c8d177088a1866641_99153_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="289"
+data-flex-basis="693px"
+>&lt;/p>
+&lt;p>填写一个最宽松的&lt;code>MIT&lt;/code>许可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>7.Would you like to define your dependencies (require) interactively [yes]？&lt;/p>
+&lt;p>提示是否需要设置依赖环境或者其他包，输入yes&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>8.Search for a package：&lt;/p>
+&lt;p>提示搜索哪个依赖?依赖PHP,输入php&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>9.Enter the version constraint to require (or leave blank to use the latest version)：&lt;/p>
+&lt;p>需要哪个版本？注意最好是精确输入自己电脑环境一样的PHP版本，我这里是7.4.30，不然会出现以下报错：
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init-error.png"
+width="983"
+height="537"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init-error_huff8ac06cde2af27c756344b300ea7788_24993_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init-error_huff8ac06cde2af27c756344b300ea7788_24993_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="183"
+data-flex-basis="439px"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>10.重复询问7和8的问题，直接回车跳过&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>11.Add PSR-4 autoload mapping? laps namespace &amp;ldquo;Koala9527\Composerbuild&amp;quot;to the entered relative path. [src/, n to skip]:&lt;/p>
+&lt;p>是否添加PSR-4自动加载映射，将命名空间 “Koala9527\Composerbuild “映射到输入的相对路径， 这里输入了n 跳过，在后面composer.json自己增加autolaod的配置&lt;/p>
+&lt;p>接下来就会预览这个composer包composer.json的预览内容,下面会再次询问是否确认生成&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>11.Do you confirm generation[yes]?&lt;/p>
+&lt;p>确认生成 yes&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;ol start="12">
+&lt;li>Would you like to install dependencies now [yes]?&lt;/li>
+&lt;/ol>
+&lt;p>是否先择安装依赖，输入yes ,没有其他依赖会直接完成&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>最后整个过程截图：
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init.png"
+width="1081"
+height="761"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init_hu11b2617eeea72a2299c9213b7ac469cf_35365_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init_hu11b2617eeea72a2299c9213b7ac469cf_35365_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="142"
+data-flex-basis="340px"
+>&lt;/p>
+&lt;p>生成的文件目录结构：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"> |-- composer-build&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- composer.json&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- composer.lock&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- package-lock.json&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- vendor&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- autoload.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- composer&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- autoload_classmap.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- autoload_namespaces.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- autoload_psr4.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- autoload_real.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- autoload_static.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- ClassLoader.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- installed.json&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- installed.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- InstalledVersions.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- LICENSE&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |-- platform_check.php&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>此时这个composer包没有任何内容，我们需要给他添加一个测试的功能代码&lt;/p>
+&lt;p>新建功能代码之前需要在composer.json添加pst-4自动加载配置，在项目根目录composer.json添加以下代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">&amp;#34;autoload&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;psr-4&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;Test\\&amp;#34;: &amp;#34;src/&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后在项目根目录新建src 目录，在src目录下Test.php文件，文件内容为：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">&amp;lt;?php
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">namespace Test;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">class Test
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> public function index()
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> echo &amp;#39;composer包测试成功&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后执行&lt;code> composer dump-autoload&lt;/code>命令 自动加载类映射 生成配置，具体配置内容在vendor/composer/autoload_psr4.php 文件中&lt;/p>
+&lt;p>最后在根目录下新建一个index.php文件测试，内容为：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">&amp;lt;?php
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">require &amp;#34;vendor/autoload.php&amp;#34;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">use Test\Test;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$Test = new Test();
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$Test-&amp;gt;index();
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用PHP 命令运行这个index.php 文件：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/run.png"
+width="544"
+height="60"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/run_hucb6572996b2af1555d6db55b0719ae6b_4170_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/run_hucb6572996b2af1555d6db55b0719ae6b_4170_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="906"
+data-flex-basis="2176px"
+>&lt;/p>
+&lt;p>测试成功！&lt;/p>
+&lt;h1 id="上传github">上传GitHub&lt;/h1>
+&lt;p>项目需要公开，首先新建一个Git仓库
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-init.png"
+width="1497"
+height="530"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-init_huccad3e42d8b0a16bdbdd35360c14f57a_48461_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-init_huccad3e42d8b0a16bdbdd35360c14f57a_48461_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="282"
+data-flex-basis="677px"
+>&lt;/p>
+&lt;p>把刚刚制作的composer 项目全部代码上传&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/name-tree.png"
+width="688"
+height="486"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/name-tree_hu8e9980611b362068f9d73122b1d80e4a_20198_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/name-tree_hu8e9980611b362068f9d73122b1d80e4a_20198_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="141"
+data-flex-basis="339px"
+>&lt;/p>
+&lt;p>依次执行以下Git命令就上传成功了&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git init
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git add .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git commit -m &amp;#39;first commit&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git branch -M main
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git remote add origin git@github.com:koala9527/composer-test.git
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git push -u origin main
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="搭建satis仓库">搭建satis仓库&lt;/h1>
+&lt;p>satis是Composer 官方提供的建立私有源的工具，比较简单，原理就是把Git仓库里的composer 包拉取下来制作成静态文件，然后需要自己通过Nginx镜像容器部署形成一个简单的UI界面，进行composer包的分发下载的服务&lt;/p>
+&lt;p>这里只做一个最简单的尝试，没有权限验证的配置&lt;/p>
+&lt;p>首先是需要一个公网的机器&lt;/p>
+&lt;p>选定一个空白文件夹新建一个satis.json配置文件。内容如下(/home/satis/build/satis.json)：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;name&amp;#34;: &amp;#34;koala/composer-test&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;homepage&amp;#34;: &amp;#34;http://satis.tuwei.space&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;repositories&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {&amp;#34;type&amp;#34;: &amp;#34;vcs&amp;#34;, &amp;#34;url&amp;#34;: &amp;#34;https://github.com/koala9527/composer-test&amp;#34; }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;require-all&amp;#34;: true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>注意：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>json配置文件中name字段必须是在composer包创建时的vendor/package的内容，否则无法初始化&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>homepage 是satis仓库的访问域名地址，也就是自己私有源的地址&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>repositories就是配置自己的GitHub项目地址，这里可以配置成一个列表，包含多个composer包。vcs的意思是版本控制系统&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>require-all 拉取全部包&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>使用composer/satis 镜像拉取GitHub内容打包静态文件和UI界面：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker run --rm -it -v /home/satis/build:/build -v /home/satis/composer:/composer composer/satis
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>主要参数是&lt;code>--rm&lt;/code> ，容器只运行一次，退出时删除。&lt;/p>
+&lt;p>在宿主机/home/satis/build目录下会生成output 文件夹，此时把这个文件通过Nginx容器运行起来，然后通过域名解析，satis私有仓库就搭建完成了
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/output.png"
+width="375"
+height="40"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/output_hu3374799b080a3402a017e72703347a7e_2855_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/output_hu3374799b080a3402a017e72703347a7e_2855_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="937"
+data-flex-basis="2250px"
+>&lt;/p>
+&lt;p>通过Nginx镜像运行静态UI界面&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker run -itd --name=nginx_satis -p 8881:80 -v /home/satis/build/output:/usr/share/nginx/html nginx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>域名解析到宿主机8881端口，这里通过自己服务中的宝塔反向代理解析，现在访问域名：&lt;/p>
+&lt;p>&lt;strong>satis.tuwei.space&lt;/strong>&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/web-ui.png"
+width="1365"
+height="591"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/web-ui_hu4ea0f599194ef49af2b13c42209a2f72_36715_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/web-ui_hu4ea0f599194ef49af2b13c42209a2f72_36715_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="230"
+data-flex-basis="554px"
+>&lt;/p>
+&lt;h1 id="测试">测试&lt;/h1>
+&lt;p>拿一个不重要的Hyperf项目测试，项目根目录下composer.json文件添加私有源配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">&amp;#34;repositories&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;type&amp;#34;: &amp;#34;composer&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;url&amp;#34;: &amp;#34;http://satis.tuwei.space&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>还可以更换全局的composer 源来拉取这个私有composer包：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">composer config -g repo.packagist composer http://satis.tuwei.space
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>自己的私有仓库是http协议，需要取消安全检查，不然在composer require 命令会报错：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">composer config -g secure-http false
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用&lt;code>composer require&lt;/code> 拉取私有包：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">composer require koala/composer-test
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-require.png"
+width="758"
+height="422"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-require_huc1f1854868d6a408b0069954e8859b3e_59547_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-require_huc1f1854868d6a408b0069954e8859b3e_59547_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="179"
+data-flex-basis="431px"
+>&lt;/p>
+&lt;h1 id="参考教程">参考教程&lt;/h1>
+&lt;p>&lt;a class="link" href="https://hub.docker.com/r/composer/satis" target="_blank" rel="noopener"
+>https://hub.docker.com/r/composer/satis&lt;/a>&lt;br>
+&lt;a class="link" href="https://zhuanlan.zhihu.com/p/542952527" target="_blank" rel="noopener"
+>https://zhuanlan.zhihu.com/p/542952527&lt;/a>&lt;/p></description></item><item><title>记录搭建Hugo 博客，使用stack主题快速启动部署</title><link>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/</link><pubDate>Sat, 07 Jan 2023 20:33:43 +0800</pubDate><guid>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/stack.png" alt="Featured image of post 记录搭建Hugo 博客，使用stack主题快速启动部署" />&lt;h1 id="为什么要写博客">为什么要写博客&lt;/h1>
+&lt;p>2022年结束，写了一篇年终报告，回顾发现记录总结是一个非常重要的事情，在接下来的时间需要把这件事养成一个习惯，不断记录，思考，积累 进步。&lt;/p>
+&lt;h1 id="选择hugo">选择Hugo&lt;/h1>
+&lt;p>Hugo 比较偏向后端，编译速度非常快，就这么简单。&lt;/p>
+&lt;h1 id="简单记录一下过程">简单记录一下过程&lt;/h1>
+&lt;p>首要任务是选择一个简单好看的主题：&lt;a class="link" href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener"
+>hugo-theme-stack&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/stack.png"
+width="1477"
+height="814"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/stack_hu2fcf86eed2264053012faaf0a9c52a98_99085_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/stack_hu2fcf86eed2264053012faaf0a9c52a98_99085_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="181"
+data-flex-basis="435px"
+>&lt;/p>
+&lt;p>这个主题最初是在V2EX 看到的，挺小清新的，符合现代审美。然后在Hugo的官方主题商店看到了它。&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/store.png"
+width="1899"
+height="935"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/store_hudf71c8fd6c8668af6b27945855bcddab_364538_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/store_hudf71c8fd6c8668af6b27945855bcddab_364538_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="203"
+data-flex-basis="487px"
+>&lt;/p>
+&lt;p>看起来主题的亮色模式有点太白了，有些文字看得不是很清楚，后面再想办法调整一下。&lt;/p>
+&lt;p>一开始看Hugo官方文档使用命令行新建一个Hugo项目再添加这个主题，因为有一些设置覆盖，一直没弄好，后面参考文档直接使用了这个主题的快速入门模板项目，
+直接拉下来，调整配置直接运行起来了，目前使用项目自带的GitHub Action地配置搭配了一个二级域名部署在了GitHub Page上了。&lt;/p>
+&lt;p>接下来仔细说说自己做了那些事，改了哪些东西。因为没有参考任何的教程，查找地相关教程都比较笼统，没有针对这个主题的教程，所以下面的内容全都是自己折腾实验的。&lt;/p>
+&lt;h2 id="改配置">改配置&lt;/h2>
+&lt;p>快速启动模板的GitHub 地址：&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/CaiJimmy/hugo-theme-stack-starter" target="_blank" rel="noopener"
+>CaiJimmy/hugo-theme-stack-starter&lt;/a>&lt;/p>
+&lt;p>&lt;code>git clone https://github.com/CaiJimmy/hugo-theme-stack-starter&lt;/code>&lt;/p>
+&lt;p>先把代码拉下来，所有的配置文件都在/config/_default 文件夹内，配置文件有很多，自己修改了其中个别几个，下面详细讲讲。&lt;/p>
+&lt;h3 id="configtoml">config.toml&lt;/h3>
+&lt;p>博客的基本信息&lt;/p>
+&lt;p>标题，用户名，部署的域名，语言&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-toml" data-lang="toml">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">baseurl&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;https://blog.tuwei.space&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">languageCode&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;zh-Hans&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">paginate&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="mi">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">title&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;koala9527的博客&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">DefaultContentLanguage&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;zh-cn&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">hasCJKLanguage&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Change it to your Disqus shortname before using&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">disqusShortname&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;koala9527&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="menutoml">menu.toml&lt;/h3>
+&lt;p>博客菜单&lt;/p>
+&lt;p>删掉了Twitter联系方式，更改GitHub地址，没有什么拿得出手的，就留这个吧。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-toml" data-lang="toml">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[[&lt;/span>&lt;span class="nx">social&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">identifier&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;github&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">name&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;GitHub&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">url&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;https://github.com/koala9527&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="nx">social&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">params&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">icon&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;brand-github&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="paramstoml">params.toml&lt;/h3>
+&lt;p>杂项，很多配置，没有仔细研究&lt;/p>
+&lt;p>我只改了两项，个性签名和头像。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-toml" data-lang="toml">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="nx">sidebar&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">emoji&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;🍥&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">subtitle&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;悟已往者不谏,知来者知可追&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="nx">sidebar&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">avatar&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">enabled&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">local&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">src&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;img/avatar.jpg&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这里需要注意的是头像的文件位置，需要在项目根目录新建一个assets/img文件夹，把头像的图片文件放进去，官方文档是这么说的：
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/ava_img.png"
+width="1394"
+height="437"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/ava_img_hu42c8a8495689e72ad38ddeb05ee592ba_51810_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/ava_img_hu42c8a8495689e72ad38ddeb05ee592ba_51810_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="官方文档"
+class="gallery-image"
+data-flex-grow="318"
+data-flex-basis="765px"
+>&lt;/p>
+&lt;h2 id="部署">部署&lt;/h2>
+&lt;p>先要在GitHub 新建一个公开的项目，我的自己项目地址：
+&lt;a class="link" href="https://github.com/koala9527/my-hugo-blog" target="_blank" rel="noopener"
+>koala9527/my-hugo-blog&lt;/a>&lt;/p>
+&lt;p>此时需要注意推送的分支需要和快速启动模板内.github/deploy.yml文件的CI触发的分支一致。&lt;/p>
+&lt;p>我一开始没看见注意使用的是main这个名字，项目中的出发分支名称是master无法触发自动部署。&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img.png"
+width="1342"
+height="695"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_hu458eb369470e246dd2cbf4aa6fcc4b8a_51451_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_hu458eb369470e246dd2cbf4aa6fcc4b8a_51451_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="193"
+data-flex-basis="463px"
+>&lt;/p>
+&lt;p>接着把本地修改的内容全部提交到刚刚新建的Github仓库，注意分支，Git仓库会触发Github Action自动新建一个gh-page的分支。&lt;/p>
+&lt;h3 id="解析域名">解析域名&lt;/h3>
+&lt;p>点击项目的Settings-&amp;gt;pages&lt;/p>
+&lt;p>设置部署构建来源设置成来自分支&lt;/p>
+&lt;p>分支名称为gh-pages&lt;br>
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_1.png"
+width="1387"
+height="785"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_1_hu70bb24ffaefe7ac2964550c31ab8cc0f_64777_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_1_hu70bb24ffaefe7ac2964550c31ab8cc0f_64777_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="176"
+data-flex-basis="424px"
+>&lt;/p>
+&lt;p>然后再设置一个自定义域名&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_2.png"
+width="1419"
+height="240"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_2_hudf54ff414defa1d0049c65812c19a9a5_12149_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_2_hudf54ff414defa1d0049c65812c19a9a5_12149_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="591"
+data-flex-basis="1419px"
+>
+设置域名过后需要在域名DNS服务商设置DNS解析。&lt;/p>
+&lt;p>上面是是Git账号的域名解析，不确定是不是必须的，在账号设置下的page菜单中添加，添加过后会提示需要一个TXT类型域名解析用来 验证域名的所有权。
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_3.png"
+width="1350"
+height="843"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_3_hub4fe5d051178aca2f120163e856e4bff_39098_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_3_hub4fe5d051178aca2f120163e856e4bff_39098_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="160"
+data-flex-basis="384px"
+>&lt;/p>
+&lt;p>下面是项目的自定义域名解析，是一个二级域名，二级域名记录为blog，解析内容为koala9527.github.io ,记录类型为CNAME,koala9527为我自己的Github名称。
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_4.png"
+width="770"
+height="279"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_4_hu3fea66b6428f3aadf388f653134fa541_15812_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_4_hu3fea66b6428f3aadf388f653134fa541_15812_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="275"
+data-flex-basis="662px"
+>
+到此为止，整个博客的从零开始到上线部署就完成了。&lt;/p>
+&lt;h1 id="写在最后">写在最后&lt;/h1>
+&lt;p>GitHub的访问貌似有一点慢，后面考虑部署到CDN上面吧，静态页面博客部署，访问，迁移非常地方便快速，这些优点就非常明显！&lt;/p></description></item></channel></rss>

@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on koala9527的博客</title><link>https://blog.tuwei.space/tags/docker/</link><description>Recent content in Docker on koala9527的博客</description><generator>Hugo -- gohugo.io</generator><language>zh-Hans</language><lastBuildDate>Thu, 02 Mar 2023 20:54:10 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>Kplayer 24小时BiliBili直播推流 docker部署教程</title><link>https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/</link><pubDate>Thu, 02 Mar 2023 20:54:10 +0800</pubDate><guid>https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/</guid><description>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/2023-3-2-1677761236933.png" alt="Featured image of post Kplayer 24小时BiliBili直播推流 docker部署教程" />&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>看到张大妈网站有一个非常火的文章，分享如何使用docker 部署一个24小时直播推流的服务薅羊毛，正好有闲置的服务器，然后每天收益大概有1元钱，于是就想试一下。&lt;/p>
+&lt;h2 id="项目介绍">项目介绍&lt;/h2>
+&lt;p>项目地址：&lt;a class="link" href="https://github.com/bytelang/kplayer-go" target="_blank" rel="noopener"
+>bytelang/kplayer-go&lt;/a>&lt;/p>
+&lt;p>项目介绍看图
+&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img.png"
+width="886"
+height="767"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_hu5e4fcc949d2f3a829177780f809df23e_50697_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_hu5e4fcc949d2f3a829177780f809df23e_50697_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="115"
+data-flex-basis="277px"
+>&lt;/p>
+&lt;h2 id="部署">部署&lt;/h2>
+&lt;p>第一步准备docker 镜像&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">docker pull bytelang/kplayer:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="准备配置文件路径映射">准备配置文件路径映射&lt;/h2>
+&lt;p>准备工作，准备三个文件/文件夹映射&lt;br>
+1.配置文件映射&lt;br>
+2.播放资源的文件夹映射&lt;br>
+3.缓存目录的映射&lt;/p>
+&lt;p>我的服务器是Linux Centos系统，服务器叫宿主机。&lt;br>
+宿主机文件地址是需要自己自定义的&lt;/p>
+&lt;ul>
+&lt;li>宿主机播放资源文件地址(放了一些抖音视频)：/home/***/mp4&lt;/li>
+&lt;li>宿主机配置文件（稍后再说）：/home/***/kplayer/config.json&lt;/li>
+&lt;li>宿主机直播编码缓存文件地址 ：/home/***/kplayer/cache&lt;/li>
+&lt;/ul>
+&lt;p>容器映射的文件目录是固定的&lt;br>
+宿主机播放资源文件地址是根据config.json内容配置文件来定义的&lt;/p>
+&lt;ul>
+&lt;li>容器播放资源文件地址：/video&lt;/li>
+&lt;li>宿主机配置文件（必须固定的地址）：/kplayer/config.json&lt;/li>
+&lt;li>容器播放资源文件地址（必须固定的地址）：/kplayer/cache&lt;/li>
+&lt;/ul>
+&lt;h2 id="获取bilibili-直播推流地址">获取BiliBili 直播推流地址&lt;/h2>
+&lt;p>1.首页直播：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_1.png"
+width="1076"
+height="169"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_1_hu1409b81e6cd502045fdd2511a394ebc9_184652_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_1_hu1409b81e6cd502045fdd2511a394ebc9_184652_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="636"
+data-flex-basis="1528px"
+>&lt;/p>
+&lt;p>2.网页右侧开播设置：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_2.png"
+width="372"
+height="736"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_2_hua5d68031bef4da2c54dca2fadefd4efe_377606_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_2_hua5d68031bef4da2c54dca2fadefd4efe_377606_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="50"
+data-flex-basis="121px"
+>&lt;/p>
+&lt;p>3.选择分类，点击开播，前提是需要身份证和姓名实名认证：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_3.png"
+width="1227"
+height="823"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_3_huaec79a58912ecc4caba5c3caf16ff351_87991_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_3_huaec79a58912ecc4caba5c3caf16ff351_87991_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="149"
+data-flex-basis="357px"
+>&lt;/p>
+&lt;p>4.得到直播推流地址：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_4.png"
+width="797"
+height="374"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_4_hu422655f704384936add689f4709b2c8f_14665_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_4_hu422655f704384936add689f4709b2c8f_14665_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="213"
+data-flex-basis="511px"
+>&lt;/p>
+&lt;p>&lt;code>服务器地址&lt;/code> 拼接上 &lt;code>串流密钥&lt;/code> 就是推流的地址：
+&lt;code>rtmp://live-push.bilivideo.com/live-bvc/?streamname=live_******_******&amp;amp;key=**************&amp;amp;schedule=rtmp&amp;amp;pflag=1&lt;/code>&lt;/p>
+&lt;h2 id="configjson配置文件内容">config.json配置文件内容&lt;/h2>
+&lt;p>在宿主机/home/***/kplayer/config.json内容如下（把上面获取的推流地址替换到下面的配置文件中） ：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;version&amp;#34;: &amp;#34;2.0.0&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;resource&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;lists&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;/video/&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;extensions&amp;#34;: [&amp;#34;mp4&amp;#34;]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;output&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;lists&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;path&amp;#34;: &amp;#34;rtmp://live-push.bilivideo.com/live-bvc/?streamname=live_******_******&amp;amp;key=**************&amp;amp;schedule=rtmp&amp;amp;pflag=1&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;reconnect_internal&amp;#34;: 5
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> },
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;play&amp;#34;: {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;fill_strategy&amp;#34;: &amp;#34;ratio&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;skip_invalid_resource&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;cache_on&amp;#34;: true,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;play_model&amp;#34;: &amp;#34;random&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>注意 &lt;code>['resource']['lists']&lt;/code> 的配置内容就是 容器内的播放资源文件地址&lt;/p>
+&lt;p>&lt;code>&amp;quot;cache_on&amp;quot;:true&lt;/code> 就是启用推流编码缓存，会生成缓存，命中缓存节约CPU资源&lt;/p>
+&lt;p>&lt;code>&amp;quot;play_model&amp;quot;: &amp;quot;random&amp;quot;&lt;/code> 就是在播放列表中随机播放&lt;/p>
+&lt;h2 id="启动运行">启动运行&lt;/h2>
+&lt;p>使用docker 运行容器 加上上面的文件目录映射就可以了：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">docker run -td --name&lt;span class="o">=&lt;/span>kplayer -v /home/***/mp4:/video -v /home/***/kplayer/config.json:/kplayer/config.json -v /home/***/kplayer/cache:/kplayer/cache --restart&lt;span class="o">=&lt;/span>always bytelang/kplayer:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用&lt;code>docker logs kplayer&lt;/code>查看日志，看到下面的日志就表示成功了：
+&lt;img src="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_5.png"
+width="965"
+height="233"
+srcset="https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_5_hu5e6460b4af65fd932334b2d0719049d6_30334_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/kplayer-24%E5%B0%8F%E6%97%B6bilibili%E7%9B%B4%E6%92%AD%E6%8E%A8%E6%B5%81-docker%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B/img_5_hu5e6460b4af65fd932334b2d0719049d6_30334_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_5.png"
+class="gallery-image"
+data-flex-grow="414"
+data-flex-basis="993px"
+>
+访问直播地址也正常直播了。&lt;/p></description></item><item><title>记录一次使用docker 安装Alist插件 挂载本地存储和网盘</title><link>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/</link><pubDate>Thu, 02 Feb 2023 21:20:24 +0800</pubDate><guid>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_14.png" alt="Featured image of post 记录一次使用docker 安装Alist插件 挂载本地存储和网盘" />&lt;p>前篇文章记录了斐讯N1怎么安装frpc内网穿透，现在来继续折腾Alist插件,把本地存储和网盘集中到自己的搭建的Web服务中。&lt;/p>
+&lt;p>主要是看中了Alist颜值高和网盘挂载的功能。&lt;/p>
+&lt;h1 id="使用docker-安装-alist">使用Docker 安装 Alist&lt;/h1>
+&lt;p>N1盒子已经自带了Docker软件，接下来直接使用Docker安装Alist，注意映射的本地目录。&lt;/p>
+&lt;p>我自己想让Alist管理的本地文件夹是N1盒子插的一块硬盘特定的文件夹&lt;br>
+文件目录为：/sharedfolders/N1/alist&lt;br>
+官方的教程是把容器里面的alist运行配置映射到宿主机（alist容器内的配置文件路径：/opt/alist/data）&lt;br>
+我再添加一个目录映射专门把宿主机的文件映射到Alist容器内部，让Alist管理&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">docker run -d --restart&lt;span class="o">=&lt;/span>always -v /sharedfolders/N1/alist/config:/opt/alist/data -v /sharedfolders/N1/alist/data:/home -p 5244:5244 --name&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;alist&amp;#34;&lt;/span> xhofe/alist:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后在命令行运行&lt;code>docker exec -it alist ./alist -password&lt;/code>查看初始密码：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img.png"
+width="723"
+height="159"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_hu773a691f27ca10dc601086f0a4182979_11863_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_hu773a691f27ca10dc601086f0a4182979_11863_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="454"
+data-flex-basis="1091px"
+>&lt;/p>
+&lt;p>访问内网地址&lt;code>192.168.2.122:5244&lt;/code>进入alist的管理界面：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_1.png"
+width="1050"
+height="893"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_1_hu6a834248cd0ecff056c78e27a9f129ef_13225_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_1_hu6a834248cd0ecff056c78e27a9f129ef_13225_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="117"
+data-flex-basis="282px"
+>&lt;/p>
+&lt;p>一进来就会提示没有挂载，此时不着急，点击下方登录，使用上面的密码登录，用户名是：&lt;code>admin&lt;/code>&lt;/p>
+&lt;p>登录进入改下密码，然后设置储存：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_2.png"
+width="847"
+height="641"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_2_hu35a8c3ec33122e7a807c03ab26f42c58_18397_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_2_hu35a8c3ec33122e7a807c03ab26f42c58_18397_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="132"
+data-flex-basis="317px"
+>&lt;/p>
+&lt;p>添加本机存储：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_3.png"
+width="556"
+height="729"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_3_hub4fefe620d6561a584070095c29d2ca1_21180_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_3_hub4fefe620d6561a584070095c29d2ca1_21180_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="76"
+data-flex-basis="183px"
+>&lt;/p>
+&lt;p>挂载/home目录 ，根文件夹路径也是/home：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_7.png"
+width="504"
+height="906"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_7_hu7d428690dd2c53555920550bf61a2cc2_25430_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_7_hu7d428690dd2c53555920550bf61a2cc2_25430_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_7.png"
+class="gallery-image"
+data-flex-grow="55"
+data-flex-basis="133px"
+>&lt;/p>
+&lt;p>点击添加就可以了。再访问&lt;code>192.168.2.122:5244&lt;/code>&lt;/p>
+&lt;p>就看到挂载的本机存储了：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_4.png"
+width="1312"
+height="316"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_4_hu39588b26bf8708e0803a6d97ac77055d_8524_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_4_hu39588b26bf8708e0803a6d97ac77055d_8524_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="415"
+data-flex-basis="996px"
+>
+到现在基础功能就实现了&lt;/p>
+&lt;h1 id="尝试挂载网盘">尝试挂载网盘&lt;/h1>
+&lt;p>挂载天翼云盘尝试一下，相对比较简单&lt;/p>
+&lt;p>在管理-&amp;gt;储存-&amp;gt;添加：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_5.png"
+width="437"
+height="940"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_5_hue4ea531dc6307c86f7964da8831778ce_24926_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_5_hue4ea531dc6307c86f7964da8831778ce_24926_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_5.png"
+class="gallery-image"
+data-flex-grow="46"
+data-flex-basis="111px"
+>&lt;/p>
+&lt;p>挂载路径就是在访问Alist的时候此时添加的储存的名字&lt;/p>
+&lt;p>用户名就是天翼云的账号也就是手机号。密码也就是天翼云盘的登录密码&lt;/p>
+&lt;p>根文件夹ID就是在访问web端的天翼云盘的文件夹ID, &lt;code>-11&lt;/code>就是网盘的根目录：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_6.png"
+width="1282"
+height="429"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_6_hu01df3ca97a5c7a28e76bd1cf04080d46_24653_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_6_hu01df3ca97a5c7a28e76bd1cf04080d46_24653_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_6.png"
+class="gallery-image"
+data-flex-grow="298"
+data-flex-basis="717px"
+>&lt;/p>
+&lt;h1 id="最后效果设置密码">最后效果&amp;amp;设置密码&lt;/h1>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_12.png"
+width="774"
+height="373"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_12_hud54f07470190012631a481317093c46f_13858_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_12_hud54f07470190012631a481317093c46f_13858_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_12.png"
+class="gallery-image"
+data-flex-grow="207"
+data-flex-basis="498px"
+>
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_8.png"
+width="1258"
+height="345"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_8_hud01fad7b41e3916482e9791d3e17eabb_9344_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_8_hud01fad7b41e3916482e9791d3e17eabb_9344_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_8.png"
+class="gallery-image"
+data-flex-grow="364"
+data-flex-basis="875px"
+>&lt;/p>
+&lt;p>接下来尝试可以给特定的文件夹添加密码&lt;/p>
+&lt;p>在 在管理-&amp;gt;元信息-&amp;gt;添加：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_9.png"
+width="607"
+height="494"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_9_hu8b8ce4491cd3756c4ab226b4a82f148a_15961_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_9_hu8b8ce4491cd3756c4ab226b4a82f148a_15961_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_9.png"
+class="gallery-image"
+data-flex-grow="122"
+data-flex-basis="294px"
+>&lt;/p>
+&lt;p>设置目录和密码就可以了，推出登陆后访问这个文件夹就会提示输入密码：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_10.png"
+width="1214"
+height="309"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_10_hu7e2ef9d35aa9f172d238db9bec4b393b_10311_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_10_hu7e2ef9d35aa9f172d238db9bec4b393b_10311_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_10.png"
+class="gallery-image"
+data-flex-grow="392"
+data-flex-basis="942px"
+>&lt;/p>
+&lt;p>输入密码后还可以展示刚刚设置的文件夹说明：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_11.png"
+width="767"
+height="274"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_11_hud317d033da32f56ea5fae2a125204d94_12002_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8docker-%E5%AE%89%E8%A3%85alist%E6%8F%92%E4%BB%B6-%E6%8C%82%E8%BD%BD%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%92%8C%E7%BD%91%E7%9B%98/img_11_hud317d033da32f56ea5fae2a125204d94_12002_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_11.png"
+class="gallery-image"
+data-flex-grow="279"
+data-flex-basis="671px"
+>&lt;/p>
+&lt;p>后面我会把这这个Alist通过内网穿透使它能够在公网访问，然后尝试使用webdav挂载网盘到Windows，把网盘当作系统硬盘来使用&lt;/p></description></item></channel></rss>
