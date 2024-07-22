@@ -1,0 +1,330 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="前言 前几天用Stable Diffusion到做一个文字图片融合的示例，今天就使用 Stable Diffusion API 批量操作制作，使用文生图API把视频拆成一帧一帧的图片，把这些图片融入到Stable Diffusion生成的图片里面去。 自己的Stable Diffusion 部署在Linux系统上，每次开机都需要手动切用户使用shell脚本，想做一个开机自动启动的脚本 开机脚本 使用linux systemd 服务管理工具，我的系统版本是Ubuntu22.04，需要新建服务管理脚本，文件位置：/etc/systemd/system/webui.service,内容如下： 1 2 3 4 5 6 7 8 9 10 [Unit] Description=Start sd-ui service After=multi-user.target [Service] User=koala9527 ExecStart=/home/koala9527/sd-ui/webui.sh --listen --enable-insecure-extension-access --api --gradio-auth root:123456 [Install] WantedBy=default.target 1.注意使用正确的用户启动这个命令 ，我这里是koala9527 2.还要注意正确的Stable Diffusion 的启动目录，我这里使用的绝对路径，从根目录开始写的 3.注意我这里相对比上篇文章写的启动参数增加一个--api的选项，这里是启动API服务 使用一下命令使它重启自动启动并现在启动 1 2 3 systemctl daemon-reload systemctl enable webui.service systemctl start webui.service 下载controlnet 上篇只下载了controlnet 扩展，这次需要安装它的模型 模型地址：https://huggingface.co/lllyasviel/ControlNet-v1-1 需要使用Git下载移动到相关目录：/*sd安装目录*/extensions/sd-webui-controlnet/models (体积比较大，耐心等待~) 下载移动完成后效果： 参考源码 没有官方文档，自己找了一些案例测试了很久，最后是按照这个项目完成了想要的结果 ControlNet API项目地址： https://github.com/Mikubill/sd-webui-controlnet"><title>Stable Diffusion UI 开机启动 & contronet API接入</title>
+<link rel=canonical href=https://blog.tuwei.space/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/><link rel=stylesheet href=/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css><meta property='og:title' content="Stable Diffusion UI 开机启动 & contronet API接入"><meta property='og:description' content="前言 前几天用Stable Diffusion到做一个文字图片融合的示例，今天就使用 Stable Diffusion API 批量操作制作，使用文生图API把视频拆成一帧一帧的图片，把这些图片融入到Stable Diffusion生成的图片里面去。 自己的Stable Diffusion 部署在Linux系统上，每次开机都需要手动切用户使用shell脚本，想做一个开机自动启动的脚本 开机脚本 使用linux systemd 服务管理工具，我的系统版本是Ubuntu22.04，需要新建服务管理脚本，文件位置：/etc/systemd/system/webui.service,内容如下： 1 2 3 4 5 6 7 8 9 10 [Unit] Description=Start sd-ui service After=multi-user.target [Service] User=koala9527 ExecStart=/home/koala9527/sd-ui/webui.sh --listen --enable-insecure-extension-access --api --gradio-auth root:123456 [Install] WantedBy=default.target 1.注意使用正确的用户启动这个命令 ，我这里是koala9527 2.还要注意正确的Stable Diffusion 的启动目录，我这里使用的绝对路径，从根目录开始写的 3.注意我这里相对比上篇文章写的启动参数增加一个--api的选项，这里是启动API服务 使用一下命令使它重启自动启动并现在启动 1 2 3 systemctl daemon-reload systemctl enable webui.service systemctl start webui.service 下载controlnet 上篇只下载了controlnet 扩展，这次需要安装它的模型 模型地址：https://huggingface.co/lllyasviel/ControlNet-v1-1 需要使用Git下载移动到相关目录：/*sd安装目录*/extensions/sd-webui-controlnet/models (体积比较大，耐心等待~) 下载移动完成后效果： 参考源码 没有官方文档，自己找了一些案例测试了很久，最后是按照这个项目完成了想要的结果 ControlNet API项目地址： https://github.com/Mikubill/sd-webui-controlnet"><meta property='og:url' content='https://blog.tuwei.space/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/'><meta property='og:site_name' content='Example Site'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2023-12-17T17:13:36+08:00'><meta property='article:modified_time' content='2023-12-17T17:13:36+08:00'><meta property='og:image' content='https://blog.tuwei.space/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_3.png'><meta name=twitter:title content="Stable Diffusion UI 开机启动 & contronet API接入"><meta name=twitter:description content="前言 前几天用Stable Diffusion到做一个文字图片融合的示例，今天就使用 Stable Diffusion API 批量操作制作，使用文生图API把视频拆成一帧一帧的图片，把这些图片融入到Stable Diffusion生成的图片里面去。 自己的Stable Diffusion 部署在Linux系统上，每次开机都需要手动切用户使用shell脚本，想做一个开机自动启动的脚本 开机脚本 使用linux systemd 服务管理工具，我的系统版本是Ubuntu22.04，需要新建服务管理脚本，文件位置：/etc/systemd/system/webui.service,内容如下： 1 2 3 4 5 6 7 8 9 10 [Unit] Description=Start sd-ui service After=multi-user.target [Service] User=koala9527 ExecStart=/home/koala9527/sd-ui/webui.sh --listen --enable-insecure-extension-access --api --gradio-auth root:123456 [Install] WantedBy=default.target 1.注意使用正确的用户启动这个命令 ，我这里是koala9527 2.还要注意正确的Stable Diffusion 的启动目录，我这里使用的绝对路径，从根目录开始写的 3.注意我这里相对比上篇文章写的启动参数增加一个--api的选项，这里是启动API服务 使用一下命令使它重启自动启动并现在启动 1 2 3 systemctl daemon-reload systemctl enable webui.service systemctl start webui.service 下载controlnet 上篇只下载了controlnet 扩展，这次需要安装它的模型 模型地址：https://huggingface.co/lllyasviel/ControlNet-v1-1 需要使用Git下载移动到相关目录：/*sd安装目录*/extensions/sd-webui-controlnet/models (体积比较大，耐心等待~) 下载移动完成后效果： 参考源码 没有官方文档，自己找了一些案例测试了很久，最后是按照这个项目完成了想要的结果 ControlNet API项目地址： https://github.com/Mikubill/sd-webui-controlnet"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content='https://blog.tuwei.space/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_3.png'><link rel="shortcut icon" href=/favicon.ico></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hude7ef4174b9e080cf26a873c84ad564d_43441_300x0_resize_q75_box.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>Example Site</a></h1><h2 class=site-description>悟已往之不谏,知来者知可追</h2></div></header><ol class=menu-social><li><a href=https://github.com/koala9527 target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 640 640"><path d="M319.988 7.973C143.293 7.973.0 151.242.0 327.96c0 141.392 91.678 261.298 218.826 303.63 16.004 2.964 21.886-6.957 21.886-15.414.0-7.63-.319-32.835-.449-59.552-89.032 19.359-107.8-37.772-107.8-37.772-14.552-36.993-35.529-46.831-35.529-46.831-29.032-19.879 2.209-19.442 2.209-19.442 32.126 2.245 49.04 32.954 49.04 32.954 28.56 48.922 74.883 34.76 93.131 26.598 2.882-20.681 11.15-34.807 20.315-42.803-71.08-8.067-145.797-35.516-145.797-158.14.0-34.926 12.52-63.485 32.965-85.88-3.33-8.078-14.291-40.606 3.083-84.674.0.0 26.87-8.61 88.029 32.8 25.512-7.075 52.878-10.642 80.056-10.76 27.2.118 54.614 3.673 80.162 10.76 61.076-41.386 87.922-32.8 87.922-32.8 17.398 44.08 6.485 76.631 3.154 84.675 20.516 22.394 32.93 50.953 32.93 85.879.0 122.907-74.883 149.93-146.117 157.856 11.481 9.921 21.733 29.398 21.733 59.233.0 42.792-.366 77.28-.366 87.804.0 8.516 5.764 18.473 21.992 15.354 127.076-42.354 218.637-162.274 218.637-303.582.0-176.695-143.269-319.988-320-319.988l-.023.107z"/></svg></a></li><li><a href=https://juejin.cn/user/2893570335056494 target=_blank title=Juejin rel=me><svg width="36" height="28" viewBox="0 0 36 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.5875 6.77268l4.2357-3.36763L17.5875.00748237 17.5837.0 13.3555 3.39757l4.2282 3.37137L17.5875 6.77268zM17.5863 17.3955H17.59L28.5161 8.77432 25.5526 6.39453 17.59 12.6808H17.5863L17.5825 12.6845 9.61993 6.40201 6.66016 8.78181 17.5825 17.3992 17.5863 17.3955zM17.5828 23.2891 17.5865 23.2854 32.2133 11.7456l2.9635 2.3798-6.653 5.2498L17.5865 28 .284376 14.3574.0 14.1291l2.95977-2.376L17.5828 23.2891z" fill="#1e80ff"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/><img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_3_huf593e57d38497b594f7a9c60b37f078e_1355543_800x0_resize_box_3.png srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_3_huf593e57d38497b594f7a9c60b37f078e_1355543_800x0_resize_box_3.png 800w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_3_huf593e57d38497b594f7a9c60b37f078e_1355543_1600x0_resize_box_3.png 1600w" width=800 height=437 loading=lazy alt="Featured image of post Stable Diffusion UI 开机启动 & contronet API接入"></a></div><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/>Stable Diffusion UI 开机启动 & contronet API接入</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Dec 17, 2023</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 3 分钟</time></div></footer></div></header><section class=article-content><h1 id=前言>前言</h1><p>前几天用Stable Diffusion到做一个文字图片融合的示例，今天就使用 Stable Diffusion API 批量操作制作，使用文生图API把视频拆成一帧一帧的图片，把这些图片融入到Stable Diffusion生成的图片里面去。</p><p>自己的Stable Diffusion 部署在Linux系统上，每次开机都需要手动切用户使用shell脚本，想做一个开机自动启动的脚本</p><h1 id=开机脚本>开机脚本</h1><p>使用linux systemd 服务管理工具，我的系统版本是Ubuntu22.04，需要新建服务管理脚本，文件位置：<code>/etc/systemd/system/webui.service</code>,内容如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=o>[</span>Unit<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>Description</span><span class=o>=</span>Start sd-ui service
+</span></span><span class=line><span class=cl><span class=nv>After</span><span class=o>=</span>multi-user.target
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>Service<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>User</span><span class=o>=</span>koala9527
+</span></span><span class=line><span class=cl><span class=nv>ExecStart</span><span class=o>=</span>/home/koala9527/sd-ui/webui.sh --listen --enable-insecure-extension-access --api --gradio-auth root:123456
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>Install<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>WantedBy</span><span class=o>=</span>default.target
+</span></span></code></pre></td></tr></table></div></div><p>1.注意使用正确的用户启动这个命令 ，我这里是<code>koala9527</code><br>2.还要注意正确的Stable Diffusion 的启动目录，我这里使用的绝对路径，从根目录开始写的<br>3.注意我这里相对比上篇文章写的启动参数增加一个<code>--api</code>的选项，这里是启动API服务</p><p>使用一下命令使它重启自动启动并现在启动</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>systemctl daemon-reload
+</span></span><span class=line><span class=cl>systemctl <span class=nb>enable</span> webui.service
+</span></span><span class=line><span class=cl>systemctl start webui.service
+</span></span></code></pre></td></tr></table></div></div><p><img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img.png width=3265 height=555 srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_hueec5a8c6eff2f61ef0f0f14b9c358215_93925_480x0_resize_box_3.png 480w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_hueec5a8c6eff2f61ef0f0f14b9c358215_93925_1024x0_resize_box_3.png 1024w" loading=lazy alt=img.png class=gallery-image data-flex-grow=588 data-flex-basis=1411px></p><h1 id=下载controlnet>下载controlnet</h1><p>上篇只下载了controlnet 扩展，这次需要安装它的模型<br>模型地址：https://huggingface.co/lllyasviel/ControlNet-v1-1<br>需要使用Git下载移动到相关目录：/<code>*sd安装目录*</code>/extensions/sd-webui-controlnet/models (体积比较大，耐心等待~)<br><img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/ControlNet.png width=3006 height=1974 srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/ControlNet_hubc4c8ed4f64e76cabcee8186f17a95ec_345175_480x0_resize_box_3.png 480w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/ControlNet_hubc4c8ed4f64e76cabcee8186f17a95ec_345175_1024x0_resize_box_3.png 1024w" loading=lazy alt=ControlNet.png class=gallery-image data-flex-grow=152 data-flex-basis=365px>
+下载移动完成后效果：
+<img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_1.png width=3141 height=120 srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_1_hu0b1a7a69a663108431cb54030bf0d1aa_29036_480x0_resize_box_3.png 480w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_1_hu0b1a7a69a663108431cb54030bf0d1aa_29036_1024x0_resize_box_3.png 1024w" loading=lazy alt=img_1.png class=gallery-image data-flex-grow=2617 data-flex-basis=6282px>
+<img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_2.png width=1881 height=847 srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_2_huf982b80c195ea2c04c015b3d9955eab7_88132_480x0_resize_box_3.png 480w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_2_huf982b80c195ea2c04c015b3d9955eab7_88132_1024x0_resize_box_3.png 1024w" loading=lazy alt=img_2.png class=gallery-image data-flex-grow=222 data-flex-basis=532px></p><h1 id=参考源码>参考源码</h1><p>没有官方文档，自己找了一些案例测试了很久，最后是按照这个项目完成了想要的结果<br>ControlNet API项目地址：
+<a class=link href=https://github.com/Mikubill/sd-webui-controlnet target=_blank rel=noopener>https://github.com/Mikubill/sd-webui-controlnet</a></p><p><img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/codegit.png width=2961 height=1804 srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/codegit_hu1032ea26e7f2b18ec8e44feb157f31fd_186196_480x0_resize_box_3.png 480w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/codegit_hu1032ea26e7f2b18ec8e44feb157f31fd_186196_1024x0_resize_box_3.png 1024w" loading=lazy alt=codegit.png class=gallery-image data-flex-grow=164 data-flex-basis=393px></p><h1 id=api>API</h1><p>刚在脚本启动的时候增加了一个参数：<code>--api</code>，开放了相关的API 接口，现在访问Stable Diffusion 的地址加上<code>/api</code>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=nx>http</span><span class=o>:</span><span class=c1>//192.168.2.226:7860/docs
+</span></span></span></code></pre></td></tr></table></div></div><p><img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_4.png width=2907 height=1851 srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_4_hu67f8f002ca39944b9862252934577538_162203_480x0_resize_box_3.png 480w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_4_hu67f8f002ca39944b9862252934577538_162203_1024x0_resize_box_3.png 1024w" loading=lazy alt=img_4.png class=gallery-image data-flex-grow=157 data-flex-basis=376px></p><p>找到接口：<code>sdapi/v1/txt2img</code><br>所以得到最终的请求接口：<code>http://192.168.2.226:7860/sdapi/v1/txt2img</code></p><p>根据上篇文章的图片融合的功能构造的请求参数：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;alwayson_scripts&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;controlnet&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;args&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;enabled&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;model&#34;</span><span class=p>:</span> <span class=s2>&#34;control_v11f1e_sd15_tile [a371b31b]&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;module&#34;</span><span class=p>:</span> <span class=s2>&#34;tile_resample&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;weight&#34;</span><span class=p>:</span> <span class=mf>0.85</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;image&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;resize_mode&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;lowvram&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;processor_res&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;threshold_a&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;threshold_b&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>  
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;guidance_end&#34;</span><span class=p>:</span> <span class=mf>0.75</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;guidance_start&#34;</span><span class=p>:</span> <span class=mf>0.25</span><span class=p>,</span>    
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;pixel_perfect&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;control_mode&#34;</span><span class=p>:</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>      
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;batch_size&#34;</span><span class=p>:</span> <span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;cfg_scale&#34;</span><span class=p>:</span> <span class=mi>7</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;height&#34;</span><span class=p>:</span> <span class=mi>512</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;negative_prompt&#34;</span><span class=p>:</span> <span class=s2>&#34;(worst quality, low quality:1.4),lowres,(Text:1.3),(logo:1.3), normal quality, cropped, blurry, drawing, painting,signature, soft, blurry, drawing, sketch, poor quality, ugly, type, word,pixelated, low resolution, saturated, high contrast, oversharpened&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;override_settings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;sd_model_checkpoint&#34;</span><span class=p>:</span> <span class=s2>&#34;dreamshaper_8.safetensors [879db523c3]&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;clip_skip&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;prompt&#34;</span><span class=p>:</span> <span class=s2>&#34;dvArchModern, 85mm, f1.8, portrait, photo realistic, hyperrealistic, orante, super detailed, intricate, dramatic, sunlight lighting, shadows, high dynamic range, house, masterpiece,best quality,(8k, RAW photo:1.2),(( ultra realistic)), modernvilla, blackandwhite, architecture, building, cloud, vivid colour, masterpiece,best quality,super detailed,realistic,photorealistic, 8k, sharp focus, a photo of a building&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;restore_faces&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;sampler_index&#34;</span><span class=p>:</span> <span class=s2>&#34;DPM++ SDE Karras&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;sampler_name&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;script_args&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;seed&#34;</span><span class=p>:</span> <span class=mi>-1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;steps&#34;</span><span class=p>:</span> <span class=mi>20</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;tiling&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;width&#34;</span><span class=p>:</span> <span class=mi>512</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;height&#34;</span><span class=p>:</span><span class=mi>1024</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=封装功能python函数>封装功能Python函数</h1><p>大概几个逻辑：
+提前需要把视频手动拆解成图片。
+然后代码功能就是把这些图片分别转base64 转入SD接口，然后请求API 得到图片base64数据存到本地</p><p>整个Python 脚本：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span><span class=lnt>88
+</span><span class=lnt>89
+</span><span class=lnt>90
+</span><span class=lnt>91
+</span><span class=lnt>92
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>requests</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>io</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>base64</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>PIL</span> <span class=kn>import</span> <span class=n>Image</span><span class=p>,</span> <span class=n>PngImagePlugin</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>glob</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>url</span> <span class=o>=</span> <span class=s2>&#34;http://192.168.2.226:7860/&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1># 封装的图片转base64,转换完成过给喂给Stable Diffusion</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>getbase64</span><span class=p>(</span><span class=n>path</span><span class=p>):</span> 
+</span></span><span class=line><span class=cl>    <span class=k>with</span> <span class=nb>open</span><span class=p>(</span><span class=n>path</span><span class=p>,</span><span class=s1>&#39;rb&#39;</span><span class=p>)</span> <span class=k>as</span> <span class=n>file</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>image_data</span> <span class=o>=</span> <span class=n>file</span><span class=o>.</span><span class=n>read</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>image_data</span> <span class=o>=</span> <span class=s1>&#39;data:image/png;base64,&#39;</span><span class=o>+</span><span class=n>base64</span><span class=o>.</span><span class=n>b64encode</span><span class=p>(</span><span class=n>image_data</span><span class=p>)</span><span class=o>.</span><span class=n>decode</span><span class=p>(</span><span class=s1>&#39;utf-8&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>image_data</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>build_img</span><span class=p>(</span><span class=n>name</span><span class=p>,</span><span class=n>image_data</span><span class=p>,</span><span class=n>save_path</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>payload</span><span class=o>=</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;alwayson_scripts&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;controlnet&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=s2>&#34;args&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;enabled&#34;</span><span class=p>:</span> <span class=kc>True</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;model&#34;</span><span class=p>:</span> <span class=s2>&#34;control_v11f1e_sd15_tile [a371b31b]&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;module&#34;</span><span class=p>:</span> <span class=s2>&#34;tile_resample&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;weight&#34;</span><span class=p>:</span> <span class=mf>0.85</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;image&#34;</span><span class=p>:</span> <span class=n>image_data</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;resize_mode&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;lowvram&#34;</span><span class=p>:</span> <span class=kc>True</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;processor_res&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;threshold_a&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;threshold_b&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>  
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;guidance_end&#34;</span><span class=p>:</span> <span class=mf>0.75</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;guidance_start&#34;</span><span class=p>:</span> <span class=mf>0.25</span><span class=p>,</span>    
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;pixel_perfect&#34;</span><span class=p>:</span> <span class=kc>False</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>          <span class=s2>&#34;control_mode&#34;</span><span class=p>:</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>      
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;batch_size&#34;</span><span class=p>:</span> <span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;cfg_scale&#34;</span><span class=p>:</span> <span class=mi>7</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;height&#34;</span><span class=p>:</span> <span class=mi>512</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;negative_prompt&#34;</span><span class=p>:</span> <span class=s2>&#34;(worst quality, low quality:1.4),lowres,(Text:1.3),(logo:1.3), normal quality, cropped, blurry, drawing, painting,signature, soft, blurry, drawing, sketch, poor quality, ugly, type, word,pixelated, low resolution, saturated, high contrast, oversharpened&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;override_settings&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;sd_model_checkpoint&#34;</span><span class=p>:</span> <span class=s2>&#34;dreamshaper_8.safetensors [879db523c3]&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;clip_skip&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;prompt&#34;</span><span class=p>:</span> <span class=s2>&#34;dvArchModern, 85mm, f1.8, portrait, photo realistic, hyperrealistic, orante, super detailed, intricate, dramatic, sunlight lighting, shadows, high dynamic range, house, masterpiece,best quality,(8k, RAW photo:1.2),(( ultra realistic)), modernvilla, blackandwhite, architecture, building, cloud, vivid colour, masterpiece,best quality,super detailed,realistic,photorealistic, 8k, sharp focus, a photo of a building&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;restore_faces&#34;</span><span class=p>:</span> <span class=kc>False</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;sampler_index&#34;</span><span class=p>:</span> <span class=s2>&#34;DPM++ SDE Karras&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;sampler_name&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;script_args&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;seed&#34;</span><span class=p>:</span> <span class=o>-</span><span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;steps&#34;</span><span class=p>:</span> <span class=mi>20</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;tiling&#34;</span><span class=p>:</span> <span class=kc>False</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;width&#34;</span><span class=p>:</span> <span class=mi>512</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s2>&#34;height&#34;</span><span class=p>:</span><span class=mi>1024</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>response</span> <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=n>url</span><span class=o>=</span><span class=sa>f</span><span class=s1>&#39;</span><span class=si>{</span><span class=n>url</span><span class=si>}</span><span class=s1>sdapi/v1/txt2img&#39;</span><span class=p>,</span> <span class=n>json</span><span class=o>=</span><span class=n>payload</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>r</span> <span class=o>=</span> <span class=n>response</span><span class=o>.</span><span class=n>json</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>res</span> <span class=o>=</span> <span class=n>r</span><span class=p>[</span><span class=s1>&#39;images&#39;</span><span class=p>][</span><span class=mi>0</span><span class=p>]</span> <span class=c1># 请求的接口会有两个图片结果，第一个是结果，第二个是contrlnet的输入原图，刚开始这里没搞清楚，走了弯路</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>image</span> <span class=o>=</span> <span class=n>Image</span><span class=o>.</span><span class=n>open</span><span class=p>(</span><span class=n>io</span><span class=o>.</span><span class=n>BytesIO</span><span class=p>(</span><span class=n>base64</span><span class=o>.</span><span class=n>b64decode</span><span class=p>(</span><span class=n>res</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s2>&#34;,&#34;</span><span class=p>,</span><span class=mi>1</span><span class=p>)[</span><span class=mi>0</span><span class=p>])))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>png_payload</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;image&#34;</span><span class=p>:</span> <span class=s2>&#34;data:image/png;base64,&#34;</span> <span class=o>+</span> <span class=n>res</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>response2</span> <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=n>url</span><span class=o>=</span><span class=sa>f</span><span class=s1>&#39;</span><span class=si>{</span><span class=n>url</span><span class=si>}</span><span class=s1>sdapi/v1/png-info&#39;</span><span class=p>,</span> <span class=n>json</span><span class=o>=</span><span class=n>png_payload</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>PI</span> <span class=o>=</span> <span class=n>PngImagePlugin</span><span class=o>.</span><span class=n>PngInfo</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>PI</span><span class=o>.</span><span class=n>add_text</span><span class=p>(</span><span class=s2>&#34;parameters&#34;</span><span class=p>,</span> <span class=n>response2</span><span class=o>.</span><span class=n>json</span><span class=p>()</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&#34;info&#34;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=n>image</span><span class=o>.</span><span class=n>save</span><span class=p>(</span><span class=s1>&#39;./&#39;</span><span class=o>+</span><span class=n>save_path</span><span class=o>+</span><span class=s1>&#39;/output_&#39;</span><span class=o>+</span><span class=nb>str</span><span class=p>(</span><span class=n>name</span><span class=p>)</span><span class=o>+</span><span class=s1>&#39;.png&#39;</span><span class=p>,</span> <span class=n>pnginfo</span><span class=o>=</span><span class=n>PI</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 定义要遍历的文件路径模式</span>
+</span></span><span class=line><span class=cl><span class=n>file_pattern</span> <span class=o>=</span> <span class=s2>&#34;./cxk/*.png&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>path</span> <span class=o>=</span> <span class=s1>&#39;./cxk/&#39;</span>
+</span></span><span class=line><span class=cl><span class=c1># 遍历所有匹配指定模式的文件</span>
+</span></span><span class=line><span class=cl><span class=n>count</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>filename</span> <span class=ow>in</span> <span class=n>glob</span><span class=o>.</span><span class=n>glob</span><span class=p>(</span><span class=n>file_pattern</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>      <span class=c1># print(filename)</span>
+</span></span><span class=line><span class=cl>      <span class=n>name</span><span class=o>=</span> <span class=n>filename</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s1>&#39;</span><span class=se>\\</span><span class=s1>&#39;</span><span class=p>)[</span><span class=o>-</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=nb>print</span><span class=p>(</span><span class=n>path</span><span class=o>+</span><span class=n>name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=n>base64data</span> <span class=o>=</span> <span class=n>getbase64</span><span class=p>(</span><span class=n>path</span><span class=o>+</span><span class=n>name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=n>save_path</span> <span class=o>=</span> <span class=s1>&#39;cxk_build&#39;</span>
+</span></span><span class=line><span class=cl>      <span class=n>build_img</span><span class=p>(</span><span class=n>name</span><span class=p>,</span><span class=n>base64data</span><span class=p>,</span><span class=n>save_path</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=nb>print</span><span class=p>(</span><span class=n>count</span><span class=p>)</span>  
+</span></span><span class=line><span class=cl>    <span class=n>count</span><span class=o>+=</span><span class=mi>1</span>
+</span></span></code></pre></td></tr></table></div></div><p>在脚本目录下还有相关读取的文件夹，需要把融合的视频拆成一帧的文件夹为<code>cxk</code> ,通过融合过后保存的文件夹 需要提前新建:<code>cxk_build</code> 文件夹</p><h1 id=测试>测试</h1><p>脚本运行完毕可以看到 cxk_build 文件夹生成了很多图片，我这里的视频是59秒，拆成一帧一帧的图片一共生成接近900张图片，使用的工具是ScreenToGIF，使用2070s生成一张15秒-16秒之间，粗略计算大概接近4个小时，非常耗电，哈哈 。<br><img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_3.png width=3862 height=2110 srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_3_huf593e57d38497b594f7a9c60b37f078e_1355543_480x0_resize_box_3.png 480w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/img_3_huf593e57d38497b594f7a9c60b37f078e_1355543_1024x0_resize_box_3.png 1024w" loading=lazy alt=img_3.png class=gallery-image data-flex-grow=183 data-flex-basis=439px></p><p>然后测试了几个发现去掉三分之一的帧数观感最好，保留每一帧的图片闪动很快看不清背景图，保留一半的图每一帧的展示时间少了看不清融入的图<br>效果（为了缩小gif缩小体积，画质差了很多）：
+<img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/show4.gif width=512 height=1024 srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/show4_hu556dc22bebbe64354802881dfcc814a2_4006777_480x0_resize_box_1.gif 480w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/show4_hu556dc22bebbe64354802881dfcc814a2_4006777_1024x0_resize_box_1.gif 1024w" loading=lazy alt=show4.gif class=gallery-image data-flex-grow=50 data-flex-basis=120px></p><p><img src=/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/2.gif width=512 height=1024 srcset="/p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/2_hu508614f0e183c2aacd6b415a4a32b2d4_10206157_480x0_resize_box_1.gif 480w, /p/stable-diffusion-ui-%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8-contronet-api%E6%8E%A5%E5%85%A5/2_hu508614f0e183c2aacd6b415a4a32b2d4_10206157_1024x0_resize_box_1.gif 1024w" loading=lazy alt=2.gif class=gallery-image data-flex-grow=50 data-flex-basis=120px></p><h1 id=总结>总结</h1><p>其实使用 contolnet 脚本插件 LoopbackWave（ <a class=link href=https://github.com/FizzleDorf/Loopback-Wave-for-A1111-Webui%ef%bc%89 target=_blank rel=noopener>https://github.com/FizzleDorf/Loopback-Wave-for-A1111-Webui）</a> 以及Deforum（<a class=link href=https://github.com/deforum-art/sd-webui-deforum%ef%bc%89 target=_blank rel=noopener>https://github.com/deforum-art/sd-webui-deforum）</a> 插件可以达到比上图更好的更丝滑的视频动态转场效果，但是看起来操作比较复杂，原因是自己作为程序员更希望通过发挥自己的技能来做出一些意思的东西。
+后面也会继续折腾，分享教程~</p></section><footer class=article-footer><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><script src=https://utteranc.es/client.js repo=koala9527/my-hugo-blog issue-term=pathname crossorigin=anonymous async></script><style>.utterances{max-width:unset}</style><script>let utterancesLoaded=!1;function setUtterancesTheme(e){let t=document.querySelector(".utterances iframe");t&&t.contentWindow.postMessage({type:"set-theme",theme:`github-${e}`},"https://utteranc.es")}addEventListener("message",e=>{if(e.origin!=="https://utteranc.es")return;utterancesLoaded=!0,setUtterancesTheme(document.documentElement.dataset.scheme)}),window.addEventListener("onColorSchemeChange",e=>{if(!utterancesLoaded)return;setUtterancesTheme(e.detail)})</script><footer class=site-footer><section class=copyright>&copy;
+2023 -
+2024 Example Site</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.26.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

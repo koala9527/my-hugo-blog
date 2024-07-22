@@ -1,0 +1,507 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="原因 想学UniApp不想用Vue2 ,想学习Vue3 ,但是前端必须是学习typeScript，Vue3 是用TypeScript重构的。 TypeScript 是JavaScript 的超集。 本篇文章只会作为快查手册，尽量减少废话。 变量定义 引用类型 TypeScript 主要是要做数据类型的约束，避免出BUG 变量后面加上冒号加上类型： 1 2 3 4 5 6 7 8 // 字符串 const str: string = 'Hello World' // 数值 const num: number = 1 // 布尔值 const bool: boolean = true ts 也会自动推到原始数据类型，所以上面的例子也可以省略： 1 2 3 const str = 'Hello World' const num = 1 const bool = true 原始数据类型 是一种既非对象也无内置方法的数据. 原始数据类型： 原始数据类型 JavaScript TypeScript 字符串 String string 数值 Number number 布尔值 Boolean boolean 大整数 BigInt bigint 符号 Symbol symbol 不存在 Null null 未定义 Undefined undefined 布尔值，大整数，符号 还是很少见的"><title>TypeScript语法简要总结</title>
+<link rel=canonical href=https://blog.tuwei.space/p/typescript%E8%AF%AD%E6%B3%95%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/><link rel=stylesheet href=/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css><meta property='og:title' content="TypeScript语法简要总结"><meta property='og:description' content="原因 想学UniApp不想用Vue2 ,想学习Vue3 ,但是前端必须是学习typeScript，Vue3 是用TypeScript重构的。 TypeScript 是JavaScript 的超集。 本篇文章只会作为快查手册，尽量减少废话。 变量定义 引用类型 TypeScript 主要是要做数据类型的约束，避免出BUG 变量后面加上冒号加上类型： 1 2 3 4 5 6 7 8 // 字符串 const str: string = 'Hello World' // 数值 const num: number = 1 // 布尔值 const bool: boolean = true ts 也会自动推到原始数据类型，所以上面的例子也可以省略： 1 2 3 const str = 'Hello World' const num = 1 const bool = true 原始数据类型 是一种既非对象也无内置方法的数据. 原始数据类型： 原始数据类型 JavaScript TypeScript 字符串 String string 数值 Number number 布尔值 Boolean boolean 大整数 BigInt bigint 符号 Symbol symbol 不存在 Null null 未定义 Undefined undefined 布尔值，大整数，符号 还是很少见的"><meta property='og:url' content='https://blog.tuwei.space/p/typescript%E8%AF%AD%E6%B3%95%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/'><meta property='og:site_name' content='Example Site'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='TypeScript'><meta property='article:published_time' content='2023-07-05T21:57:05+08:00'><meta property='article:modified_time' content='2023-07-05T21:57:05+08:00'><meta property='og:image' content='https://blog.tuwei.space/p/typescript%E8%AF%AD%E6%B3%95%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/typescript-logo.png'><meta name=twitter:title content="TypeScript语法简要总结"><meta name=twitter:description content="原因 想学UniApp不想用Vue2 ,想学习Vue3 ,但是前端必须是学习typeScript，Vue3 是用TypeScript重构的。 TypeScript 是JavaScript 的超集。 本篇文章只会作为快查手册，尽量减少废话。 变量定义 引用类型 TypeScript 主要是要做数据类型的约束，避免出BUG 变量后面加上冒号加上类型： 1 2 3 4 5 6 7 8 // 字符串 const str: string = 'Hello World' // 数值 const num: number = 1 // 布尔值 const bool: boolean = true ts 也会自动推到原始数据类型，所以上面的例子也可以省略： 1 2 3 const str = 'Hello World' const num = 1 const bool = true 原始数据类型 是一种既非对象也无内置方法的数据. 原始数据类型： 原始数据类型 JavaScript TypeScript 字符串 String string 数值 Number number 布尔值 Boolean boolean 大整数 BigInt bigint 符号 Symbol symbol 不存在 Null null 未定义 Undefined undefined 布尔值，大整数，符号 还是很少见的"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content='https://blog.tuwei.space/p/typescript%E8%AF%AD%E6%B3%95%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/typescript-logo.png'><link rel="shortcut icon" href=/favicon.ico></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hude7ef4174b9e080cf26a873c84ad564d_43441_300x0_resize_q75_box.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>Example Site</a></h1><h2 class=site-description>悟已往之不谏,知来者知可追</h2></div></header><ol class=menu-social><li><a href=https://github.com/koala9527 target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd" viewBox="0 0 640 640"><path d="M319.988 7.973C143.293 7.973.0 151.242.0 327.96c0 141.392 91.678 261.298 218.826 303.63 16.004 2.964 21.886-6.957 21.886-15.414.0-7.63-.319-32.835-.449-59.552-89.032 19.359-107.8-37.772-107.8-37.772-14.552-36.993-35.529-46.831-35.529-46.831-29.032-19.879 2.209-19.442 2.209-19.442 32.126 2.245 49.04 32.954 49.04 32.954 28.56 48.922 74.883 34.76 93.131 26.598 2.882-20.681 11.15-34.807 20.315-42.803-71.08-8.067-145.797-35.516-145.797-158.14.0-34.926 12.52-63.485 32.965-85.88-3.33-8.078-14.291-40.606 3.083-84.674.0.0 26.87-8.61 88.029 32.8 25.512-7.075 52.878-10.642 80.056-10.76 27.2.118 54.614 3.673 80.162 10.76 61.076-41.386 87.922-32.8 87.922-32.8 17.398 44.08 6.485 76.631 3.154 84.675 20.516 22.394 32.93 50.953 32.93 85.879.0 122.907-74.883 149.93-146.117 157.856 11.481 9.921 21.733 29.398 21.733 59.233.0 42.792-.366 77.28-.366 87.804.0 8.516 5.764 18.473 21.992 15.354 127.076-42.354 218.637-162.274 218.637-303.582.0-176.695-143.269-319.988-320-319.988l-.023.107z"/></svg></a></li><li><a href=https://juejin.cn/user/2893570335056494 target=_blank title=Juejin rel=me><svg width="36" height="28" viewBox="0 0 36 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.5875 6.77268l4.2357-3.36763L17.5875.00748237 17.5837.0 13.3555 3.39757l4.2282 3.37137L17.5875 6.77268zM17.5863 17.3955H17.59L28.5161 8.77432 25.5526 6.39453 17.59 12.6808H17.5863L17.5825 12.6845 9.61993 6.40201 6.66016 8.78181 17.5825 17.3992 17.5863 17.3955zM17.5828 23.2891 17.5865 23.2854 32.2133 11.7456l2.9635 2.3798-6.653 5.2498L17.5865 28 .284376 14.3574.0 14.1291l2.95977-2.376L17.5828 23.2891z" fill="#1e80ff"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#原因>原因</a></li><li><a href=#变量定义>变量定义</a><ol><li><a href=#引用类型>引用类型</a></li><li><a href=#引用类型-1>引用类型</a></li><li><a href=#对象>对象</a><ol><li><a href=#可选属性>可选属性</a></li><li><a href=#调用自身接口>调用自身接口</a></li><li><a href=#接口的继承>接口的继承</a></li></ol></li><li><a href=#类>类</a><ol><li><a href=#类的继承>类的继承</a></li><li><a href=#类的静态方法静态属性>类的静态方法&静态属性</a></li><li><a href=#接口继承类>接口继承类</a></li></ol></li><li><a href=#联合类型>联合类型</a></li></ol></li><li><a href=#函数>函数</a><ol><li><a href=#可选参数>可选参数</a></li><li><a href=#异步函数>异步函数</a></li><li><a href=#函数本身的类型>函数本身的类型</a></li><li><a href=#任意值>任意值</a></li><li><a href=#例外情况>例外情况</a></li><li><a href=#tsconfigjson>tsconfig.json</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/p/typescript%E8%AF%AD%E6%B3%95%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/><img src=/p/typescript%E8%AF%AD%E6%B3%95%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/typescript-logo_hud7a85cc4aefb053722349bc639a0a050_127301_800x0_resize_box_3.png srcset="/p/typescript%E8%AF%AD%E6%B3%95%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/typescript-logo_hud7a85cc4aefb053722349bc639a0a050_127301_800x0_resize_box_3.png 800w, /p/typescript%E8%AF%AD%E6%B3%95%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/typescript-logo_hud7a85cc4aefb053722349bc639a0a050_127301_1600x0_resize_box_3.png 1600w" width=800 height=450 loading=lazy alt="Featured image of post TypeScript语法简要总结"></a></div><div class=article-details><header class=article-category><a href=/categories/%E5%89%8D%E7%AB%AF/>前端</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/typescript%E8%AF%AD%E6%B3%95%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/>TypeScript语法简要总结</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Jul 05, 2023</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 5 分钟</time></div></footer></div></header><section class=article-content><h2 id=原因>原因</h2><p>想学UniApp不想用Vue2 ,想学习Vue3 ,但是前端必须是学习typeScript，Vue3 是用TypeScript重构的。</p><p>TypeScript 是JavaScript 的超集。</p><p>本篇文章只会作为快查手册，尽量减少废话。</p><h2 id=变量定义>变量定义</h2><h3 id=引用类型>引用类型</h3><p>TypeScript 主要是要做数据类型的约束，避免出BUG
+变量后面加上冒号加上类型：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// 字符串
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>str</span>: <span class=kt>string</span> <span class=o>=</span> <span class=s1>&#39;Hello World&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 数值
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>num</span>: <span class=kt>number</span> <span class=o>=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 布尔值
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=kt>bool</span><span class=o>:</span> <span class=kr>boolean</span> <span class=o>=</span> <span class=kc>true</span>
+</span></span></code></pre></td></tr></table></div></div><p>ts 也会自动推到原始数据类型，所以上面的例子也可以省略：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>str</span> <span class=o>=</span> <span class=s1>&#39;Hello World&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>num</span> <span class=o>=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=kt>bool</span> <span class=o>=</span> <span class=kc>true</span>
+</span></span></code></pre></td></tr></table></div></div><p>原始数据类型 是一种既非对象也无内置方法的数据.<br>原始数据类型：</p><div class=table-wrapper><table><thead><tr><th>原始数据类型</th><th>JavaScript</th><th>TypeScript</th></tr></thead><tbody><tr><td>字符串</td><td>String</td><td>string</td></tr><tr><td>数值</td><td>Number</td><td>number</td></tr><tr><td>布尔值</td><td>Boolean</td><td>boolean</td></tr><tr><td>大整数</td><td>BigInt</td><td>bigint</td></tr><tr><td>符号</td><td>Symbol</td><td>symbol</td></tr><tr><td>不存在</td><td>Null</td><td>null</td></tr><tr><td>未定义</td><td>Undefined</td><td>undefined</td></tr></tbody></table></div><p>布尔值，大整数，符号 还是很少见的</p><h3 id=引用类型-1>引用类型</h3><p>主要是要注意引用类型，数组
+举几个例子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// 字符串数组
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>strs</span>: <span class=kt>string</span><span class=p>[]</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;Hello World&#39;</span><span class=p>,</span> <span class=s1>&#39;Hi World&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 数值数组
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>nums</span>: <span class=kt>number</span><span class=p>[]</span> <span class=o>=</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 布尔值数组
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>bools</span>: <span class=kt>boolean</span><span class=p>[]</span> <span class=o>=</span> <span class=p>[</span><span class=kc>true</span><span class=p>,</span> <span class=kc>true</span><span class=p>,</span> <span class=kc>false</span><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>数组也会自动推导：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>strs</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;Hello World&#39;</span><span class=p>,</span> <span class=s1>&#39;Hi World&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>nums</span> <span class=o>=</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>bools</span> <span class=o>=</span> <span class=p>[</span><span class=kc>true</span><span class=p>,</span> <span class=kc>true</span><span class=p>,</span> <span class=kc>false</span><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>需要数组里的元素有值
+也可以这样:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>nums</span>: <span class=kt>number</span><span class=p>[]</span> <span class=o>=</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=c1>// 如果是空的就必须要指定数组的元素类型
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=对象>对象</h3><p>对象的类型定义有两个语法： type 和 interface
+定义对象：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>type</span> <span class=nx>Data</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span>: <span class=kt>string</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>age</span>: <span class=kt>number</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>Data</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span>: <span class=kt>string</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>age</span>: <span class=kt>number</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>interface 是比较常用的，也叫接口，通畅使用大驼峰写法（每个单词首字母大写），普通变量使用小驼峰（除了第一个单词首字母小写，其他每个单词都是大写）
+声明对象，</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>myData</span>: <span class=kt>Data</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span><span class=o>:</span> <span class=s1>&#39;aha&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>age</span>: <span class=kt>18</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=可选属性>可选属性</h4><p>上面在接口定义元素时每个元素都是必须的，声明时不给某个元素赋值会报错，此时就有一个<code>可选属性</code>的方法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>Data</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span>: <span class=kt>string</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>age?</span>: <span class=kt>number</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>myData</span>: <span class=kt>Data</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span><span class=o>:</span> <span class=s1>&#39;aha&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>myData</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=调用自身接口>调用自身接口</h4><p>举个例子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>Data</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 这个属性引用了本身的类型
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>list</span>: <span class=kt>Data</span><span class=p>[]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>myData</span>: <span class=kt>Data</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span><span class=o>:</span> <span class=s1>&#39;Boss&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>list</span><span class=o>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=s1>&#39;name&#39;</span><span class=o>:</span> <span class=s1>&#39;A&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=nx>list</span><span class=o>:</span> <span class=p>[],</span>
+</span></span><span class=line><span class=cl>        <span class=p>},</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=s1>&#39;name&#39;</span><span class=o>:</span> <span class=s1>&#39;B&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=nx>list</span><span class=o>:</span> <span class=p>[],</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=接口的继承>接口的继承</h4><p>类似于类的继承，继承父接口的所有属性，并进行追加属性</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>Data</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span>: <span class=kt>string</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>age</span>: <span class=kt>number</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>TestData</span> <span class=kr>extends</span> <span class=nx>Data</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>isTrue</span>: <span class=kt>Boolean</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>myData</span>: <span class=kt>TestData</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span><span class=o>:</span> <span class=s1>&#39;蓝色妖姬&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>age</span>: <span class=kt>80</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>isTrue</span>: <span class=kt>true</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>myData</span><span class=p>)</span>  <span class=c1>// { name: &#39;蓝色妖姬&#39;, age: 80, isTrue: true }
+</span></span></span></code></pre></td></tr></table></div></div><p>如果不需要父接口的属性可以使用Omit 来去除父接口其中的属性 (如果有多个属性，用 | 来分隔开)</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>Data</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span>: <span class=kt>string</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>age</span>: <span class=kt>number</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>say</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>TestData</span> <span class=kr>extends</span> <span class=nx>Omit</span><span class=p>&lt;</span><span class=nt>Data</span><span class=err>,</span> <span class=err>&#39;</span><span class=na>age</span><span class=err>&#39;</span> <span class=err>|</span> <span class=err>&#39;</span><span class=na>say</span><span class=err>&#39;</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>isTrue</span>: <span class=kt>Boolean</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>myData</span>: <span class=kt>TestData</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span><span class=o>:</span> <span class=s1>&#39;切尔西&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>isTrue</span>: <span class=kt>true</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>myData</span><span class=p>)</span>  <span class=c1>// { name: &#39;切尔西&#39;, isTrue: true }
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=类>类</h3><p>对javascript 的类没有印象和的可以参考阮一峰的教程： <a class=link href=https://es6.ruanyifeng.com/#docs/class target=_blank rel=noopener>Class 的基本语法</a><br>跟其他的语言的类的用法基本一致<br>通过class关键字，可以定义类<br>一般用类定义内置方法,内置变量来使用类，其中constructor() 是类的构造方法（就是实例化类之后自动执行的方法）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// 类的定义也是大驼峰
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>class</span> <span class=nx>MyClass</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>constructor</span><span class=p>(</span><span class=nx>name</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>this</span><span class=p>.</span><span class=nx>name</span> <span class=o>=</span> <span class=nx>name</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>name</span><span class=p>,</span> <span class=s1>&#39;类被初始化！~&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nx>say</span><span class=p>(</span><span class=nx>data</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;我是&#39;</span><span class=p>,</span> <span class=k>this</span><span class=p>.</span><span class=nx>name</span><span class=p>,</span> <span class=s1>&#39;,我要说:&#39;</span><span class=p>,</span> <span class=nx>data</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>newClass</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>MyClass</span><span class=p>(</span><span class=s1>&#39;test&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>newClass</span><span class=p>.</span><span class=nx>say</span><span class=p>(</span><span class=s1>&#39;牛逼&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1>// 打印结果：
+</span></span></span><span class=line><span class=cl><span class=c1>// test 类被初始化！~
+</span></span></span><span class=line><span class=cl><span class=c1>// 我是 test ,我要说: 牛逼
+</span></span></span></code></pre></td></tr></table></div></div><p>在Vue2中常见的this ，一般也是代表某个类，也就是当前组件实例。组件实例有很多属性和方法，例如：</p><ul><li>this.data是一个指向组件数据对象的引用，它包含了组件实例中定义的所有响应式数据。</li><li>this.$props: 一个对象，包含当前组件接收的所有 props。可以通过this.$props.propName来访问父组件传递过来的 prop 值。</li><li>this.$emit(event, payload): 触发当前组件上的自定义事件。可以使用该方法向父组件发送消息或触发其他组件监听的事件。</li><li>this.$refs: 一个对象，包含通过 ref 注册的所有子组件或 DOM 元素的引用。可以使用this.$refs.refName来访问子组件或 DOM 元素。</li><li>this.$watch(expressionOrFn, callback, [options]): 监听数据变化并触发回调函数。可以用于监听响应式数据或计算属性的变化。</li><li>this.$nextTick(callback): 在下次 DOM 更新循环结束之后执行回调函数。当需要在更新后执行一些操作时，可以使用该方法。</li><li>this.$router: 可以访问 Vue Router 的实例，用于进行路由导航操作。</li><li>this.$route: 当前路由信息的对象，包含当前路径、参数等信息。</li><li>this.$store: Vuex 状态管理库的实例，用于访问全局状态和派发/提交 mutations 和 actions。</li></ul><h4 id=类的继承>类的继承</h4><p>最常见的一种使用发放，类的继承示例：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// 这是一个基础类
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>class</span> <span class=nx>Base</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kr>constructor</span><span class=p>(</span><span class=nx>userName</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>this</span><span class=p>.</span><span class=nx>name</span> <span class=o>=</span> <span class=nx>userName</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 这是另外一个类，继承自基类
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>class</span> <span class=nx>Say</span> <span class=kr>extends</span> <span class=nx>Base</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>sayName() {</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;我的名字是：&#39;</span><span class=p>,</span> <span class=k>this</span><span class=p>.</span><span class=nx>name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 这个变量拥有上面两个类的所有属性和方法
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>testName</span>: <span class=kt>Say</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Say</span><span class=p>(</span><span class=s1>&#39;Honda&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nx>testName</span><span class=p>.</span><span class=nx>sayName</span><span class=p>()</span>  <span class=c1>// 我的名字是： Honda
+</span></span></span></code></pre></td></tr></table></div></div><h4 id=类的静态方法静态属性>类的静态方法&静态属性</h4><p>静态方法就是可以不用实例化可以直接调用类的静态方法和属性，常用于一些工具函数，不依赖于类的实例状态</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>class</span> <span class=nx>TestClass</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>static</span> <span class=nx>myAge</span>: <span class=kt>number</span> <span class=o>=</span> <span class=mi>18</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kr>static</span> <span class=nx>say() {</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=s1>&#39;牛逼666&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>TestClass</span><span class=p>.</span><span class=nx>say</span><span class=p>()</span> <span class=c1>// 牛逼666
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>TestClass</span><span class=p>.</span><span class=nx>myAge</span><span class=p>)</span> <span class=c1>// 18
+</span></span></span></code></pre></td></tr></table></div></div><p>必须保证子类在父类之后定义。</p><ul><li>继承的时候必须在前面定义父类，后面写子类，不然会报错</li><li>类的方法内部如果含有this，它默认指向类的实例</li><li>箭头函数内部的this总是指向定义时所在的对象（箭头函数相当于匿名函数，并简化了函数定义，箭头函数没有原型prototype，因此箭头函数没有this指向，如果箭头函数的外层是一个普通函数，在定义的时候会继承它的this）</li></ul><p>有些复杂的东西记录一下，后面遇到真实开发问题再填坑</p><h4 id=接口继承类>接口继承类</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>class</span> <span class=nx>Person</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span>: <span class=kt>string</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kr>constructor</span><span class=p>(</span><span class=nx>name</span>: <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>this</span><span class=p>.</span><span class=nx>name</span> <span class=o>=</span> <span class=nx>name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nx>sayHello() {</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=sb>`Hello, I&#39;m </span><span class=si>${</span><span class=k>this</span><span class=p>.</span><span class=nx>name</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>interface</span> <span class=nx>IPerson</span> <span class=kr>extends</span> <span class=nx>Person</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>person</span>: <span class=kt>IPerson</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Person</span><span class=p>(</span><span class=s2>&#34;John&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>person</span><span class=p>.</span><span class=nx>sayHello</span><span class=p>();</span> <span class=c1>// Hello, I&#39;m John
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=联合类型>联合类型</h3><p>大多数是指一个方法接受参数的时候可以接受多种数据类型，例如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>function</span> <span class=nx>say</span><span class=p>(</span><span class=nx>word</span>: <span class=kt>number</span> <span class=o>|</span> <span class=kt>string</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=sb>`say: </span><span class=si>${</span><span class=nx>word</span><span class=si>}</span><span class=sb>.`</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>say</span><span class=p>(</span><span class=mi>888</span><span class=p>)</span>  <span class=c1>// say: 888.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>say</span><span class=p>(</span><span class=s1>&#39;北京申奥成功了！&#39;</span><span class=p>)</span>  <span class=c1>// say: 北京申奥成功了！.
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=函数>函数</h2><p>函数非常重要，在TypeScript 有多种写法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// 函数声明，最基础用法
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kd>function</span> <span class=nx>add1</span><span class=p>(</span><span class=nx>sum1</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>sum2</span>: <span class=kt>number</span><span class=p>)</span><span class=o>:</span> <span class=kt>number</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>sum1</span> <span class=o>+</span> <span class=nx>sum2</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 函数表达式，新手觉得难以理解的方法
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>add2</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>(</span><span class=nx>sum1</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>sum2</span>: <span class=kt>number</span><span class=p>)</span><span class=o>:</span> <span class=kt>number</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>sum1</span> <span class=o>+</span> <span class=nx>sum2</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 箭头函数，新手觉得更难以理解的方法
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>add3</span> <span class=o>=</span> <span class=p>(</span><span class=nx>sum1</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>sum2</span>: <span class=kt>number</span><span class=p>)</span><span class=o>:</span> <span class=kt>number</span> <span class=o>=&gt;</span> <span class=nx>sum1</span> <span class=o>+</span> <span class=nx>sum2</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 对象里的方法
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>obj</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>add4</span><span class=p>(</span><span class=nx>sum1</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>sum2</span>: <span class=kt>number</span><span class=p>)</span><span class=o>:</span> <span class=kt>number</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=nx>sum1</span> <span class=o>+</span> <span class=nx>sum2</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=c1>//...
+</span></span></span></code></pre></td></tr></table></div></div><p>无返回值的函数返回值使用<code>void</code>代替。 void 和 null 、 undefined 不可以混用，如果的函数返回值类型是 null ，那么是真的需要 return 一个 null 值。</p><p>函数直接使用<code>return </code>返回,没有任何内容函数指定的返回值可以用<code>void</code></p><h3 id=可选参数>可选参数</h3><p>入参的时候是可选的：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>function</span> <span class=nx>add5</span><span class=p>(</span><span class=nx>sum1</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>sum2</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>isAdd?</span>: <span class=kt>boolean</span><span class=p>)</span><span class=o>:</span> <span class=kt>number</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>isAdd</span> <span class=o>?</span> <span class=nx>x</span> <span class=o>+</span> <span class=nx>y</span> : <span class=kt>x</span> <span class=o>-</span> <span class=nx>y</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=异步函数>异步函数</h3><p>异步函数这里有个非常重要的概念
+异步函数的返回值需要用到Promise 类型来定义它的返回值：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>function</span> <span class=nx>queryData</span><span class=p>()</span><span class=o>:</span> <span class=nx>Promise</span><span class=p>&lt;</span><span class=nt>string</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=k>new</span> <span class=nx>Promise</span><span class=p>((</span><span class=nx>resolve</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setTimeout</span><span class=p>(()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>resolve</span><span class=p>(</span><span class=s1>&#39;Hello World&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span> <span class=mi>3000</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>})</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>queryData</span><span class=p>().</span><span class=nx>then</span><span class=p>((</span><span class=nx>data</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>data</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=c1>// resolve指定返回的类型，如果没有resolve那么就要指定 Promise&lt;void&gt;
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=函数本身的类型>函数本身的类型</h3><p>上面的匿名函数就没有类型，也就是箭头函数：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>const</span> <span class=nx>add</span> <span class=o>=</span> <span class=p>(</span><span class=nx>num1</span>: <span class=kt>number</span><span class=p>,</span> <span class=nx>num2</span>: <span class=kt>number</span><span class=p>)</span><span class=o>:</span> <span class=kt>number</span> <span class=o>=&gt;</span> <span class=nx>x</span> <span class=o>+</span> <span class=nx>y</span>
+</span></span><span class=line><span class=cl><span class=c1>// 左边只指定了add这个变量但是没有类型，原因是因为函数体会自动推导
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=任意值>任意值</h3><p>TypeScript 也叫AnyScript，有很多不会写强类型语言的新手喜欢使用any 来表示函数的返回值或者入参，开发中应尽量避免使用</p><p>any 是一切类型的父类型，也是一切类型的子类型</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kd>function</span> <span class=nx>say</span><span class=p>(</span><span class=nx>msg</span>: <span class=kt>any</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nb>String</span><span class=p>(</span><span class=nx>msg</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>遇到其他问题我们扩展讲讲，展示就只展示一个简单的例子</p><h3 id=例外情况>例外情况</h3><p>很多npm 包都符合TypeScript 类型，但是有些个别的没有符合，把npm 包放在.ts文件运行就会报错，需要找到TypeScript 支持的特定的npm 包才可以。</p><h3 id=tsconfigjson>tsconfig.json</h3><p>安装：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>npm install -g typescript
+</span></span></code></pre></td></tr></table></div></div><p>初始化项目：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=nx>tsc</span> <span class=o>--</span><span class=nx>init</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>Created a new tsconfig.json with:
+</span></span><span class=line><span class=cl>                                                                               TS
+</span></span><span class=line><span class=cl>  target: es2016
+</span></span><span class=line><span class=cl>  module: commonjs
+</span></span><span class=line><span class=cl>  strict: <span class=nb>true</span>
+</span></span><span class=line><span class=cl>  esModuleInterop: <span class=nb>true</span>
+</span></span><span class=line><span class=cl>  skipLibCheck: <span class=nb>true</span>
+</span></span><span class=line><span class=cl>  forceConsistentCasingInFileNames: <span class=nb>true</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>You can learn more at https://aka.ms/tsconfig.json
+</span></span></code></pre></td></tr></table></div></div><p>目录接口：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>hello-node
+</span></span><span class=line><span class=cl>│ <span class=c1># 构建产物</span>
+</span></span><span class=line><span class=cl>├─dist
+</span></span><span class=line><span class=cl>│ <span class=c1># 依赖文件夹</span>
+</span></span><span class=line><span class=cl>├─node_modules
+</span></span><span class=line><span class=cl>│ <span class=c1># 源码文件夹</span>
+</span></span><span class=line><span class=cl>├─src
+</span></span><span class=line><span class=cl>│ <span class=c1># 锁定安装依赖的版本号</span>
+</span></span><span class=line><span class=cl>├─package-lock.json
+</span></span><span class=line><span class=cl>│ <span class=c1># 项目清单</span>
+</span></span><span class=line><span class=cl>├─package.json
+</span></span><span class=line><span class=cl>│ <span class=c1># TypeScript 配置</span>
+</span></span><span class=line><span class=cl>└─tsconfig.json
+</span></span></code></pre></td></tr></table></div></div><p>tsconfig.json：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;compilerOptions&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;target&#34;</span><span class=p>:</span> <span class=s2>&#34;es6&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&#34;module&#34;</span><span class=p>:</span> <span class=s2>&#34;es6&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=nt>&#34;outDir&#34;</span><span class=p>:</span> <span class=s2>&#34;./dist&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>完整选项和功能参考官网：<a class=link href=https://www.typescriptlang.org/tsconfig target=_blank rel=noopener>tsconfig - typescriptlang</a>
+但是现在项目初始化都是使用vue-cli来新建，需要参考其他文档</p><p>未完待续。。。</p></section><footer class=article-footer><section class=article-tags><a href=/tags/typescript/>TypeScript</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article class=has-image><a href=/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/><div class=article-image><img src=/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/title.9b4cabe1ac214954302a16aa69454206_hu0ff0f5297854540926125c68a91dac25_27567_250x150_fill_box_smart1_3.png width=250 height=150 loading=lazy alt="Featured image of post Nuxt3 启动 tailwindCSS 启动!!!" data-hash="md5-m0yr4awhSVQwKhaqaUVCBg=="></div><div class=article-details><h2 class=article-title>Nuxt3 启动 tailwindCSS 启动!!!</h2></div></a></article><article class=has-image><a href=/p/vue3-%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/><div class=article-image><img src=/p/vue3-%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/title.5435219e9f5068a2a93217d3d82fc7b0_hu10926b4f8cbed773a1aed12861962ad9_27587_250x150_fill_q75_box_smart1.jpg width=250 height=150 loading=lazy alt="Featured image of post Vue3 基础语法 学习笔记" data-hash="md5-VDUhnp9QaKKpMhfT2C/HsA=="></div><div class=article-details><h2 class=article-title>Vue3 基础语法 学习笔记</h2></div></a></article></div></div></aside><script src=https://utteranc.es/client.js repo=koala9527/my-hugo-blog issue-term=pathname crossorigin=anonymous async></script><style>.utterances{max-width:unset}</style><script>let utterancesLoaded=!1;function setUtterancesTheme(e){let t=document.querySelector(".utterances iframe");t&&t.contentWindow.postMessage({type:"set-theme",theme:`github-${e}`},"https://utteranc.es")}addEventListener("message",e=>{if(e.origin!=="https://utteranc.es")return;utterancesLoaded=!0,setUtterancesTheme(document.documentElement.dataset.scheme)}),window.addEventListener("onColorSchemeChange",e=>{if(!utterancesLoaded)return;setUtterancesTheme(e.detail)})</script><footer class=site-footer><section class=copyright>&copy;
+2023 -
+2024 Example Site</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.26.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

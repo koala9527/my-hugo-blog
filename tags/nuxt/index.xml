@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Nuxt on Example Site</title><link>https://blog.tuwei.space/tags/nuxt/</link><description>Recent content in Nuxt on Example Site</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Nov 2023 23:15:12 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/tags/nuxt/index.xml" rel="self" type="application/rss+xml"/><item><title>Nuxt3 启动 tailwindCSS 启动!!!</title><link>https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/</link><pubDate>Fri, 03 Nov 2023 23:15:12 +0800</pubDate><guid>https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/</guid><description>&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/title.png" alt="Featured image of post Nuxt3 启动 tailwindCSS 启动!!!" />&lt;h1 id="前言">前言
+&lt;/h1>&lt;p>想用nuxt3 这个框架学习一下Vu3 写个网站来展示自己的一些折腾的项目成功 ，了解一下tailwindcss&lt;/p>
+&lt;h1 id="安装">安装
+&lt;/h1>&lt;h1 id="安装tailwindcss">安装tailwindCSS
+&lt;/h1>&lt;p>安装教程：https://tailwindcss.com/docs/guides/nuxtjs
+完整的跟官方一样：&lt;/p>
+&lt;p>安装命令（项目名称：test-nuxt）：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl"> npx nuxi@latest init test-nuxt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后默认选择Y
+Ok to proceed? (y) y&lt;/p>
+&lt;p>选择pnpm 为包管理器：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img.png"
+width="1468"
+height="1245"
+srcset="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_hu79a31dc3ac056f7c3f9b571a07ae616a_86952_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_hu79a31dc3ac056f7c3f9b571a07ae616a_86952_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="117"
+data-flex-basis="282px"
+>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-html" data-lang="html">&lt;span class="line">&lt;span class="cl">https://tailwindcss.com/docs/guides/nuxtjs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后cd 到项目目录 输入&lt;code>pnpm run dev&lt;/code>启动,顺便看看项目目录&lt;/p>
+&lt;p>（有端口占用，默认的应该是3000，我这里是3001）&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_1.png"
+width="1749"
+height="1044"
+srcset="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_1_hufbcb5181092ad19fba30c1fe8298006a_76458_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_1_hufbcb5181092ad19fba30c1fe8298006a_76458_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="167"
+data-flex-basis="402px"
+>&lt;/p>
+&lt;p>访问&lt;code>127.0.0.1:3001&lt;/code> 看看效果
+有一个过度好好看啊&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_8.png"
+width="1890"
+height="1416"
+srcset="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_8_huea93aaec76489d1261311eebb89d10b5_358693_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_8_huea93aaec76489d1261311eebb89d10b5_358693_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_8.png"
+class="gallery-image"
+data-flex-grow="133"
+data-flex-basis="320px"
+>
+看看效果：
+&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_2.png"
+width="1866"
+height="1283"
+srcset="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_2_huf4d45e7b91a1a3f74930f84177e5d260_135760_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_2_huf4d45e7b91a1a3f74930f84177e5d260_135760_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="145"
+data-flex-basis="349px"
+>&lt;/p>
+&lt;h1 id="安装tailwind">安装tailwind
+&lt;/h1>&lt;p>参考教程：https://tailwindcss.com/docs/guides/nuxtjs&lt;/p>
+&lt;p>做一下简单解析：&lt;/p>
+&lt;p>pnpm安装包：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl"> pnpm install -D tailwindcss postcss autoprefixer
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>初始化生成配置文件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">npx tailwindcss init
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>会自动生成&lt;code>tailwind.config.js&lt;/code> 配置文件在根目录:&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_3.png"
+width="366"
+height="557"
+srcset="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_3_hu93e2704c9876054b471221ce6d6796b8_23553_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_3_hu93e2704c9876054b471221ce6d6796b8_23553_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="65"
+data-flex-basis="157px"
+>&lt;/p>
+&lt;p>然后添加一段代码到nuxt的配置文件 &lt;code>nuxt.config.ts&lt;/code> 中：
+改之前：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// https://nuxt.com/docs/api/configuration/nuxt-config
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="kr">export&lt;/span> &lt;span class="k">default&lt;/span> &lt;span class="nx">defineNuxtConfig&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">devtools&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nx">enabled&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>改之后&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">export&lt;/span> &lt;span class="k">default&lt;/span> &lt;span class="nx">defineNuxtConfig&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">devtools&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nx">enabled&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">postcss&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">plugins&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">tailwindcss&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">autoprefixer&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>postcss 是一个转换css 的工具，通过插件的形式增加,扩展css功能。这里告诉我们引入了两个插件&lt;code>tailwindcss&lt;/code>,&lt;code>autoprefixer&lt;/code>&lt;/p>
+&lt;p>&lt;code>autoprefixer&lt;/code> 是一个自动为不同浏览器添加前缀的一个插件，提高编写代码的兼容性， 例如苹果的Safari 常常需要一个&lt;code>-webkit-&lt;/code>的Css前缀确保CSS 能够正常工作&lt;/p>
+&lt;p>然后在自动生成的&lt;code>tailwind.config.js&lt;/code>以下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="cm">/** @type {import(&amp;#39;tailwindcss&amp;#39;).Config} */&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kr">export&lt;/span> &lt;span class="k">default&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">content&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;./components/**/*.{js,vue,ts}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;./layouts/**/*.vue&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;./pages/**/*.vue&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;./plugins/**/*.{js,ts}&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;./app.vue&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;./error.vue&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">theme&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">extend&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">plugins&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">[],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>content&lt;/code> 是其中的一个选项，指定需要处理的 CSS 文件的路径&lt;/p>
+&lt;p>然后在项目根目录新建一个文件和对应的文件夹:&lt;code>./assets/css/main.css&lt;/code> ,其内容为：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-css" data-lang="css">&lt;span class="line">&lt;span class="cl">&lt;span class="p">@&lt;/span>&lt;span class="k">tailwind&lt;/span> &lt;span class="nt">base&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">@&lt;/span>&lt;span class="k">tailwind&lt;/span> &lt;span class="nt">components&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">@&lt;/span>&lt;span class="k">tailwind&lt;/span> &lt;span class="nt">utilities&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这里指明了TailwindCSS 的基础样式，组件， 使用工具。目的是接下来把这个核心文件导入到项目中， 将来使用这些工具定义页面布局和样式&lt;/p>
+&lt;p>引入方法：
+根目录下nuxt.config.js 里的CSS 配置项增加：&lt;code>~/assets/css/main.css&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// https://nuxt.com/docs/api/configuration/nuxt-config
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="kr">export&lt;/span> &lt;span class="k">default&lt;/span> &lt;span class="nx">defineNuxtConfig&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">devtools&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nx">enabled&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">css&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;~/assets/css/main.css&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">postcss&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">plugins&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">tailwindcss&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">autoprefixer&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="验证">验证
+&lt;/h1>&lt;p>修改根目录下的App.Vue，文件内容为：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="nx">template&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;lt;&lt;/span>&lt;span class="nx">div&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;lt;&lt;/span>&lt;span class="nx">h1&lt;/span> &lt;span class="kr">class&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;text-3xl font-bold underline&amp;#34;&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">Hello&lt;/span> &lt;span class="nx">world&lt;/span>&lt;span class="o">!&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">/h1&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">/div&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">/template&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>运行&lt;code>pmpn run dev&lt;/code> 访问&lt;code>127.0.0.1:3000&lt;/code>查看:
+&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_4.png"
+width="2133"
+height="1583"
+srcset="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_4_hua8b918bf7c196ef7ebf99f3f7c566c04_143803_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_4_hua8b918bf7c196ef7ebf99f3f7c566c04_143803_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="134"
+data-flex-basis="323px"
+>&lt;/p>
+&lt;p>定义了这个标签的三个CS 用法：
+可以查询相关CSS简写的含义熟悉用法，最后孰能生巧了
+&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_5.png"
+width="1548"
+height="1398"
+srcset="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_5_hu4cc699a6604749242a15520b417f42e3_272597_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_5_hu4cc699a6604749242a15520b417f42e3_272597_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_5.png"
+class="gallery-image"
+data-flex-grow="110"
+data-flex-basis="265px"
+>
+&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_6.png"
+width="1500"
+height="1244"
+srcset="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_6_huf5e1131d68a70b93b83d1f273a984318_232756_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_6_huf5e1131d68a70b93b83d1f273a984318_232756_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_6.png"
+class="gallery-image"
+data-flex-grow="120"
+data-flex-basis="289px"
+>
+&lt;img src="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_7.png"
+width="1658"
+height="1709"
+srcset="https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_7_huee97230163b25f3823fa36029fd6400f_316739_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/nuxt3-%E5%90%AF%E5%8A%A8-tailwindcss-%E5%90%AF%E5%8A%A8/img_7_huee97230163b25f3823fa36029fd6400f_316739_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_7.png"
+class="gallery-image"
+data-flex-grow="97"
+data-flex-basis="232px"
+>&lt;/p>
+&lt;p>tailwindCSS 多查查文档就会了~&lt;/p></description></item></channel></rss>
