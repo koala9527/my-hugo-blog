@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Gemini on Example Site</title><link>https://blog.tuwei.space/tags/gemini/</link><description>Recent content in Gemini on Example Site</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 29 Feb 2024 00:20:46 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/tags/gemini/index.xml" rel="self" type="application/rss+xml"/><item><title>被Sora抢尽了风头的Gemini怎么样? 今天分享一下如何搭建一个私人Gemini 网页应用，同样分享给大家玩一下</title><link>https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/</link><pubDate>Thu, 29 Feb 2024 00:20:46 +0800</pubDate><guid>https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/</guid><description>&lt;img src="https://blog.tuwei.space/chat.jpg" alt="Featured image of post 被Sora抢尽了风头的Gemini怎么样? 今天分享一下如何搭建一个私人Gemini 网页应用，同样分享给大家玩一下" />&lt;h1 id="前言">前言
+&lt;/h1>&lt;p>Google 公司自己的大语言模型Bard 在2024年2月8号更名为 Gemini，但是Gemini 1.5 发布的时候被 OpenAI 的 Sora 抢尽了风头，堪称 AI 界的「汪峰」，听说Gemini有超长上下文的能力，支持 100 万token 的上下文，这里我还没测试，有兴趣的同学可以测试一下&lt;/p>
+&lt;p>关于Gemini我就不过多介绍了，还是希望有兴趣以及有能力访问的人亲自可以直接访问试试更好（注意Gemini和OpenAI有一样的网络限制）：&lt;br>
+&lt;a class="link" href="https://gemini.google.com/" target="_blank" rel="noopener"
+>https://gemini.google.com/&lt;/a>
+直接访问的使用的模型比API接口使用的模型更加聪明 还能理解图片，这可是需要付费的ChatGPT4的能力
+&lt;img src="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_5.png"
+width="1168"
+height="1183"
+srcset="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_5_huf814a9f40d51bad7a0b007807438e160_117973_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_5_huf814a9f40d51bad7a0b007807438e160_117973_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_5.png"
+class="gallery-image"
+data-flex-grow="98"
+data-flex-basis="236px"
+>
+附带Gemini的更新日志地址，详细的介绍了这个模型的特点：&lt;br>
+&lt;a class="link" href="https://gemini.google.com/updates" target="_blank" rel="noopener"
+>https://gemini.google.com/updates&lt;/a>&lt;/p>
+&lt;h1 id="搭建">搭建
+&lt;/h1>&lt;p>话不多说开始搭建&lt;/p>
+&lt;h2 id="获取api-key">获取API Key
+&lt;/h2>&lt;p>两个月前谷歌向所有用户都免费开放了Gemini PRO大模型的API，只要你有一个谷歌账号就可以免费获取Gemini Pro大模型的API， 获取Key地址：
+&lt;a class="link" href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener"
+>https://aistudio.google.com/app/apikey&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_4.png"
+width="2652"
+height="1237"
+srcset="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_4_hu063e5c385669c2a9131564061d6f441c_133015_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_4_hu063e5c385669c2a9131564061d6f441c_133015_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="214"
+data-flex-basis="514px"
+>&lt;/p>
+&lt;h2 id="heading">
+&lt;/h2>&lt;p>私人 Gemini 网页应用采用 上篇文章说的 ChatGPT-Next-Web 这个项目，这个项目比搭建ChatGPT那个更复杂，需要增加一个.env文件&lt;/p>
+&lt;p>第一步找到 &lt;a class="link" href="https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web/" target="_blank" rel="noopener"
+>https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web/&lt;/a> 这个项目下的docker-compose.yml 文件稍作，修改为一下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;3.9&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">chatgpt-next-web&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">container_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">chatgpt-next-web&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">yidadaa/chatgpt-next-web&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">3000&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">3000&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">environment&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">OPENAI_API_KEY=$OPENAI_API_KEY&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">GOOGLE_API_KEY=$GOOGLE_API_KEY&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">CODE=$CODE&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">BASE_URL=$BASE_URL&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">OPENAI_ORG_ID=$OPENAI_ORG_ID&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">HIDE_USER_API_KEY=$HIDE_USER_API_KEY&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">DISABLE_GPT4=$DISABLE_GPT4&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">ENABLE_BALANCE_QUERY=$ENABLE_BALANCE_QUERY&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">DISABLE_FAST_LINK=$DISABLE_FAST_LINK&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">OPENAI_SB=$OPENAI_SB&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>主要是做了一个精简，我这里不需要网络代理&lt;/p>
+&lt;p>然后在项目根目录下新建一个.env文件内容如下，也是参考ChatGPT-Next-Web 官方项目根目录下的.env.template文件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Your openai api key. (required)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OPENAI_API_KEY=
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Access passsword, separated by comma. (optional)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 设置自己想要的密码，防止滥用
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CODE=***
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># You can start service behind a proxy
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PROXY_URL=http://localhost:7890
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># (optional)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Default: Empty
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Googel Gemini Pro API key, set if you want to use Google Gemini Pro API.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># 需要填写自己的Key
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">GOOGLE_API_KEY=A************************F8Y
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># (optional)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Default: https://generativelanguage.googleapis.com/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Googel Gemini Pro API url without pathname, set if you want to customize Google Gemini Pro API url.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">GOOGLE_URL=
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Override openai api request base url. (optional)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Default: https://api.openai.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Examples: http://your-openai-proxy.com
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">BASE_URL=
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Specify OpenAI organization ID.(optional)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Default: Empty
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">OPENAI_ORG_ID=
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># (optional)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Default: Empty
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># If you do not want users to use GPT-4, set this value to 1.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">DISABLE_GPT4=
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># (optional)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Default: Empty
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># If you do not want users to input their own API key, set this value to 1.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">HIDE_USER_API_KEY=
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># (optional)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Default: Empty
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># If you do want users to query balance, set this value to 1.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ENABLE_BALANCE_QUERY=
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># (optional)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># Default: Empty
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># If you want to disable parse settings from url, set this value to 1.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">DISABLE_FAST_LINK=
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>只需要修改两个地方，我用中文做了提示，现在就是docker-compose 命令启动就好：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">docker-compose up -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>现在就可以在内网访问了,端口是3000，我这里的访问地址是：http://192.168.2.118:3000/
+&lt;img src="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img.png"
+width="2484"
+height="643"
+srcset="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_huad79158b2a6aca6106e0bc87ef335892_53978_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_huad79158b2a6aca6106e0bc87ef335892_53978_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="386"
+data-flex-basis="927px"
+>
+提示需要密码就是我在.env文件设置的密码：
+&lt;img src="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_1.png"
+width="604"
+height="993"
+srcset="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_1_hu84380f28d39c9b0659e1676400fba197_25697_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_1_hu84380f28d39c9b0659e1676400fba197_25697_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="60"
+data-flex-basis="145px"
+>
+点击确认过后还需要手动选择模型，因为我这里就只填了Gemini的API Key，没有填OpenAI的Key，所以现在只能使用一个模型：
+&lt;img src="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_2.png"
+width="1771"
+height="1638"
+srcset="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_2_hud66964899f326720945f2827c5c2adee_119284_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_2_hud66964899f326720945f2827c5c2adee_119284_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="108"
+data-flex-basis="259px"
+>
+现在就可以愉快地玩耍了：
+&lt;img src="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_3.png"
+width="1834"
+height="784"
+srcset="https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_3_huf4ac2441cbf4888c39946241d02fa4bb_56403_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%A2%ABsora%E6%8A%A2%E5%B0%BD%E4%BA%86%E9%A3%8E%E5%A4%B4%E7%9A%84gemini%E6%80%8E%E4%B9%88%E6%A0%B7-%E4%BB%8A%E5%A4%A9%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A7%81%E4%BA%BAgemini-%E7%BD%91%E9%A1%B5%E5%BA%94%E7%94%A8%E5%90%8C%E6%A0%B7%E5%88%86%E4%BA%AB%E7%BB%99%E5%A4%A7%E5%AE%B6%E7%8E%A9%E4%B8%80%E4%B8%8B/img_3_huf4ac2441cbf4888c39946241d02fa4bb_56403_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="233"
+data-flex-basis="561px"
+>&lt;/p>
+&lt;h1 id="对比总结">对比&amp;amp;总结
+&lt;/h1>&lt;p>1.Gemini的相应速度比ChatGPT的要慢一些
+2.Gemini的知识正确程度要比ChatGPT3.5要强一些，比ChatGPT4要弱一些，Gemini能分得清楚周树人和鲁迅是一个人，ChatGPT3.5不行
+3.Gemini的代码生成能力要比ChatGPT3.5要弱些，会使用大量的英文解释，而且没有注意边界条件，我试了一下让他们生成一个斐波那契数列的Python代码观测得出的结论。
+个人观点仅供参考&lt;/p>
+&lt;p>最后我搭建的gemini的私有工具站点同样为了防止滥用也需要跟上篇文章一样回复关键字 gemini 来获得
+上篇文章地址：《如何搭建一个私人 ChatGPT 网页应用》&lt;/p>
+&lt;p>感谢大家看到最后，下次想分享一下ChatGPT4的一些白嫖站点，相信大家肯定很感兴趣，希望大家多多点赞，给个再看分享给更多的人，这是我更新的动力。&lt;/p></description></item></channel></rss>

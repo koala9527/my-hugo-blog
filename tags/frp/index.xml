@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Frp on Example Site</title><link>https://blog.tuwei.space/tags/frp/</link><description>Recent content in Frp on Example Site</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 01 Feb 2023 21:02:54 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/tags/frp/index.xml" rel="self" type="application/rss+xml"/><item><title>记录一次frp客户端安装</title><link>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/</link><pubDate>Wed, 01 Feb 2023 21:02:54 +0800</pubDate><guid>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/title.png" alt="Featured image of post 记录一次frp客户端安装" />&lt;p>记录一次frp客户端安装&lt;/p>
+&lt;p>最近是把老路由器换下来了，之前的使用的是路由器挂硬盘当Nas，换了新路由器没有USB接口，把之前的电视盒子斐讯N1拿出来了，刷了一个FastNas系统
+，但是没有Frp内网穿透功能，只有自己安装。&lt;/p>
+&lt;h2 id="下载解压">下载解压
+&lt;/h2>&lt;p>frp项目地址：https://github.com/fatedier/frp
+找到自己跟自己frp服务端匹配的版本 ，再确认N1的系统版本&lt;/p>
+&lt;p>下载对应的客户端：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">wget https://github.com/fatedier/frp/releases/download/v0.34.2/frp_0.34.2_linux_arm64.tar.gz
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>解压tar.gz文件命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">tar -zxvf frp_0.34.2_linux_arm64.tar.gz
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>cd 进入到解压后的文件夹找到客户端需要用的文件分别为：&lt;code>frpc.ini&lt;/code> 和 &lt;code>frpc&lt;/code>&lt;/p>
+&lt;p>首先编辑&lt;code>frpc.ini&lt;/code>配置文件连接服务端&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ini" data-lang="ini">&lt;span class="line">&lt;span class="cl">&lt;span class="k">[common]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">server_addr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">***.***.***.***&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">server_port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">7000&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">*****&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">[ssh]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">type&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">tcp&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">local_ip&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">127.0.0.1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">local_port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">22&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">remote_port&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">37051&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>连接服务端只需要3个配置 ，地址，端口，密钥&lt;/p>
+&lt;p>[ssh]是frp客户端需要穿透出去的服务
+web服务是http服务的，基于tcp的可靠协议&lt;br>
+local_ip本地服务地址&lt;br>
+local_port本地服务的端口&lt;br>
+remote_port穿透映射到公网服务器的端口&lt;/p>
+&lt;p>然后把&lt;code>frpc.ini&lt;/code> 和 &lt;code>frpc&lt;/code>两个文件移动到自己设置的位置，尽量不要放到解压出来的文件夹，不然过了一段时间就会忘记会把它误删掉。&lt;/p>
+&lt;p>我把它们分别移动到了/usr/local/frp/frpc 和 /etc/frp/frpc.ini位置&lt;/p>
+&lt;p>然后使用系统自带的 sytemctl 服务管理功能 启动frpc服务并且开机自启&lt;/p>
+&lt;p>找到 sytemctl 配置文件夹 /lib/systemd/system 新建 frpc.service 文件输入一下内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-ini" data-lang="ini">&lt;span class="line">&lt;span class="cl">&lt;span class="k">[Unit]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">Description&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">frpc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">Wants&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">network-online.target&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">After&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">network.target network-online.target&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">Requires&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">network-online.target&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">[Service]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">ExecStart&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">/usr/local/frp/frpc -c /etc/frp/frpc.ini&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">ExecStop&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">/bin/kill $MAINPID&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">Restart&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">always&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">RestartSec&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">StartLimitInterval&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">[Install]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="na">WantedBy&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">multi-user.target&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后执行&lt;code>systemctl start frpc&lt;/code> 启动frpc服务
+然后使用&lt;code>systemctl status frpc&lt;/code> 查看服务状态:
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img.png"
+width="1259"
+height="262"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_hue58d10d67f189e8c75eec270aa7f6dab_21582_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_hue58d10d67f189e8c75eec270aa7f6dab_21582_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="480"
+data-flex-basis="1153px"
+>
+最后执行&lt;code>systemctl enable frpc&lt;/code> 设置开机自启&lt;/p>
+&lt;h2 id="最后测试">最后测试
+&lt;/h2>&lt;p>使用公网IP，在frpc客户端配置的remote_port连接：
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_1.png"
+width="762"
+height="533"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_1_hu7d1c4624a7c1b23e5993970af83f9c95_23530_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1frp%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%89%E8%A3%85/img_1_hu7d1c4624a7c1b23e5993970af83f9c95_23530_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="142"
+data-flex-basis="343px"
+>&lt;/p></description></item></channel></rss>

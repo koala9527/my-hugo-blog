@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on Example Site</title><link>https://blog.tuwei.space/categories/python/</link><description>Recent content in Python on Example Site</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 18 Nov 2023 22:53:50 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/categories/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Python通过最近100期的大乐透数据统计各个数字的概率</title><link>https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/</link><pubDate>Sat, 18 Nov 2023 22:53:50 +0800</pubDate><guid>https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/</guid><description>&lt;img src="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/title.png" alt="Featured image of post Python通过最近100期的大乐透数据统计各个数字的概率" />&lt;h1 id="前言">前言
+&lt;/h1>&lt;p>前几天商场随机买了几注大乐透彩票花了20元（机选5注，自己手动选了5注），今天发现中了5块钱，好亏啊，想写一个程序程序帮我计算辅助一下哪些数字概率大一些&lt;/p>
+&lt;h1 id="思路">思路
+&lt;/h1>&lt;p>获取最近100期的号码，统计一下每个数字在100期内的概率，看看是不是在100期内是不是真随机，各数字的概率差距有多大&lt;/p>
+&lt;p>提示：每期中一等奖的都是1/21425712的机会。中奖纪录会很小。&lt;/p>
+&lt;h1 id="获取数据">获取数据
+&lt;/h1>&lt;p>大乐透官网：https://www.lottery.gov.cn/
+&lt;img src="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img.png"
+width="2742"
+height="2032"
+srcset="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_hufa21ab9db681ae5670244c023cf28499_872581_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_hufa21ab9db681ae5670244c023cf28499_872581_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="134"
+data-flex-basis="323px"
+>
+选择最近一百期，打开F12,找到任意一期其中一个数字的xpath:&lt;code>/html/body/div[4]/div[2]/div/div/div[1]/table/tbody/tr[1]/td[6]&lt;/code>
+&lt;img src="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_2.png"
+width="2533"
+height="1372"
+srcset="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_2_hub71a9d71bd3ad401e11bc6a23c20aa82_1517073_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_2_hub71a9d71bd3ad401e11bc6a23c20aa82_1517073_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="184"
+data-flex-basis="443px"
+>
+然后分析一下xpath,使用Chrome 插件：xpath-helper
+&lt;img src="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_1.png"
+width="2229"
+height="1434"
+srcset="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_1_hu9c02389282ac801ba6913a1f9f4396fe_407017_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_1_hu9c02389282ac801ba6913a1f9f4396fe_407017_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="155"
+data-flex-basis="373px"
+>
+尝试调整一下xpath ，让插件获取到最近100期的数据：&lt;br>
+xpath：&lt;code>/html/body/div[4]/div[2]/div/div/div[1]/table/tbody/tr&lt;/code>
+&lt;img src="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_3.png"
+width="2184"
+height="1245"
+srcset="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_3_hu4c099fdf8a15f87438d6988643f97d9c_656470_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_3_hu4c099fdf8a15f87438d6988643f97d9c_656470_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="175"
+data-flex-basis="421px"
+>
+把图中&lt;code>RESULTS (100)&lt;/code>的内容复制出来进行处理分析处理&lt;/p>
+&lt;h1 id="处理">处理
+&lt;/h1>&lt;p>原数据内容为：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">230330406101125070904061011250709
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">230340709101524041207091015240412
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">230350714232529021107142325290211
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">230360113222631021001132226310210
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">....
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>分别是 期号+中奖号码+中奖号码（有重复的中奖号码）
+思路：&lt;/p>
+&lt;ul>
+&lt;li>1.以换行分割得到每一期的内容&lt;/li>
+&lt;li>2.去掉每一期内容的期数，和重复的中奖号码&lt;/li>
+&lt;li>3.每隔两个数字分割，得出中奖的每一个数组&lt;/li>
+&lt;li>4.对数字进行统计次数（前区和后区独立开，因为会重复）&lt;/li>
+&lt;/ul>
+&lt;h1 id="编码">编码
+&lt;/h1>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;span class="lnt">64
+&lt;/span>&lt;span class="lnt">65
+&lt;/span>&lt;span class="lnt">66
+&lt;/span>&lt;span class="lnt">67
+&lt;/span>&lt;span class="lnt">68
+&lt;/span>&lt;span class="lnt">69
+&lt;/span>&lt;span class="lnt">70
+&lt;/span>&lt;span class="lnt">71
+&lt;/span>&lt;span class="lnt">72
+&lt;/span>&lt;span class="lnt">73
+&lt;/span>&lt;span class="lnt">74
+&lt;/span>&lt;span class="lnt">75
+&lt;/span>&lt;span class="lnt">76
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python3" data-lang="python3">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">matplotlib.pyplot&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">plt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">collections&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Counter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">pylab&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">mpl&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">begin_all_list&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">end_all_list&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 读取文件&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">with&lt;/span> &lt;span class="nb">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;./100.txt&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;r&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">res&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">res&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">one_data&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">14&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># print(i,one_data)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">begin&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">end&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">one_data&lt;/span>&lt;span class="p">[:&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">],&lt;/span>&lt;span class="n">one_data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">:]&lt;/span> &lt;span class="c1"># 得到前区后区的字符串&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bengin_list&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">)]&lt;/span> &lt;span class="c1"># 前区切割成数组&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">end_list&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">end&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">end&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">)]&lt;/span> &lt;span class="c1"># 后区切割成数组&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">one_data&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">end&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">bengin_list&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">end_list&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">begin_all_list&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="n">bengin_list&lt;/span> &lt;span class="c1"># 搜集所有的前区号码&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">end_all_list&lt;/span> &lt;span class="o">+=&lt;/span>&lt;span class="n">end_list&lt;/span> &lt;span class="c1"># 收集所有后区号码&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">begin_ball&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">36&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">end_ball&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">13&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">begin_ata_dict&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">begin_ball&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="c1"># 遍历计算所有号码在前区号码的出现的次数&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">begin_all_list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">count&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="si">%02d&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rate&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">round&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">counter&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">begin_ata_dict&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">)]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;word&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">counter&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;count&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">counter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">end_data_dict&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">end_ball&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="c1"># 遍历计算所有号码在后区号码的出现的次数&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">end_all_list&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">count&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="si">%02d&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rate&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">round&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">counter&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">),&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">end_data_dict&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">)]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;word&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">counter&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;count&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">counter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">begin_ata_dict&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">end_data_dict&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">mpl&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rcParams&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;font.sans-serif&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;SimHei&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 设置正常显示符号&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">mpl&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">rcParams&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;axes.unicode_minus&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">count_list&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;count&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">x&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">begin_ata_dict&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span>&lt;span class="p">())]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;前区&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ls&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;--&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">alpha&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">begin_ata_dict&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span>&lt;span class="p">()),&lt;/span> &lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">begin_ata_dict&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span>&lt;span class="p">()))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">begin_ata_dict&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">keys&lt;/span>&lt;span class="p">()),&lt;/span> &lt;span class="n">count_list&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># 画图指定X，Y轴内容&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">count_list&lt;/span>&lt;span class="p">)):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">word&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">begin_ata_dict&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span>&lt;span class="p">())[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="s1">&amp;#39;word&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;wrod&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">word&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">begin_ata_dict&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">keys&lt;/span>&lt;span class="p">())[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">begin_ata_dict&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">keys&lt;/span>&lt;span class="p">())[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">word&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">word&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">va&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;bottom&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">ha&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;center&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># 柱状图顶部文字&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># 暂不能同时显示两张图片，取消注释后单独运行展示&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># count_list = [x[&amp;#39;count&amp;#39;] for x in list(end_data_dict.values())]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># plt.title(&amp;#34;后区&amp;#34;)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># plt.grid(ls=&amp;#34;--&amp;#34;, alpha=0.5)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># print(list(end_data_dict.values()), list(end_data_dict.values()))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># plt.bar(list(end_data_dict.keys()), count_list)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># for i in range(len(count_list)):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># word = list(end_data_dict.values())[i][&amp;#39;word&amp;#39;]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># print(&amp;#39;wrod&amp;#39;,word,list(end_data_dict.keys())[i])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># plt.text(list(end_data_dict.keys())[i], word, word, va=&amp;#34;bottom&amp;#34;, ha=&amp;#34;center&amp;#34;)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># plt.show()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>统计前区后区的效果：
+&lt;img src="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_4.png"
+width="3850"
+height="2122"
+srcset="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_4_hu04d8bd76ff9185d536e567040241d0fc_293242_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_4_hu04d8bd76ff9185d536e567040241d0fc_293242_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="181"
+data-flex-basis="435px"
+>
+&lt;img src="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_5.png"
+width="3850"
+height="2122"
+srcset="https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_5_hu1e3a8fa2ad9980f66601f319e0618bc9_204822_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/python%E9%80%9A%E8%BF%87%E6%9C%80%E8%BF%91100%E6%9C%9F%E7%9A%84%E5%A4%A7%E4%B9%90%E9%80%8F%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E5%90%84%E4%B8%AA%E6%95%B0%E5%AD%97%E7%9A%84%E6%A6%82%E7%8E%87/img_5_hu1e3a8fa2ad9980f66601f319e0618bc9_204822_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_5.png"
+class="gallery-image"
+data-flex-grow="181"
+data-flex-basis="435px"
+>&lt;/p>
+&lt;h1 id="结论简单分析">结论&amp;amp;简单分析
+&lt;/h1>&lt;p>看起来毫无规律，前区出现次数最大差距 22-8=16次，按理来说买热门的数字应该概率大一些。&lt;/p>
+&lt;p>所以简单分析：&lt;/p>
+&lt;p>前区次数的众数是13次，出现13次的号码是09，12，21，29，31，34，35这几位数&lt;br>
+后区次数的众数是14次，出现14次的号码是03，06这几位数&lt;br>
+简单分析这几个数字是100期以内出现次数最多的数字，继续接着买出现次数多的数字概率应该大一点吧&lt;/p>
+&lt;p>有什么更好分析的方法呢？&lt;/p></description></item><item><title>安装Jupyter Notebook</title><link>https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/</link><pubDate>Sun, 02 Jul 2023 14:13:08 +0800</pubDate><guid>https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/title2.jpg" alt="Featured image of post 安装Jupyter Notebook" />&lt;p>查看哪些docker镜像：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">root@koala9527:/home/jijiwaiwai/my-project/jupyter-notebook# sudo docker search jupyter
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">NAME DESCRIPTION STARS OFFICIAL AUTOMATED
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/scipy-notebook Scientific Jupyter Notebook Python Stack fro… &lt;span class="m">406&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/tensorflow-notebook Scientific Jupyter Notebook Python Stack w/ … &lt;span class="m">345&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/all-spark-notebook Python, Scala, R and Spark Jupyter Notebook … &lt;span class="m">417&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/pyspark-notebook Python and Spark Jupyter Notebook Stack from… &lt;span class="m">277&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/datascience-notebook Data Science Jupyter Notebook Python Stack f… &lt;span class="m">1027&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/singleuser single-user docker images &lt;span class="k">for&lt;/span> use with Jupyt… &lt;span class="m">45&lt;/span> &lt;span class="o">[&lt;/span>OK&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/jupyterhub JupyterHub: multi-user Jupyter notebook serv… &lt;span class="m">326&lt;/span> &lt;span class="o">[&lt;/span>OK&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/minimal-notebook Minimal Jupyter Notebook Python Stack from h… &lt;span class="m">183&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/base-notebook Base image &lt;span class="k">for&lt;/span> Jupyter Notebook stacks from … &lt;span class="m">203&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-hub &lt;span class="m">22&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-network-tools &lt;span class="m">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/configurable-http-proxy node-http-proxy + REST API &lt;span class="m">6&lt;/span> &lt;span class="o">[&lt;/span>OK&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-singleuser-sample &lt;span class="m">10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/nbviewer Jupyter Notebook Viewer &lt;span class="m">32&lt;/span> &lt;span class="o">[&lt;/span>OK&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/r-notebook R Jupyter Notebook Stack from https://github… &lt;span class="m">54&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-image-awaiter &lt;span class="m">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/repo2docker Turn git repositories into Jupyter enabled D… &lt;span class="m">21&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-secret-sync &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/jupyterhub-onbuild onbuild version of JupyterHub images &lt;span class="m">6&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bitnami/jupyter-base-notebook &lt;span class="m">39&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/demo &lt;span class="o">(&lt;/span>DEPRECATED&lt;span class="o">)&lt;/span> Demo of the IPython/Jupyter Not… &lt;span class="m">16&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-image-cleaner &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-binderhub &lt;span class="m">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-pre-puller &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>参考官网： &lt;a class="link" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html" target="_blank" rel="noopener"
+>https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html&lt;/a> 可以看到各个镜像的简要介绍&lt;/p>
+&lt;p>我选择了第一个： 包含来自科研科学类的Python生态系统的热门软件包
+&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img.png"
+width="1399"
+height="918"
+srcset="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_hu41b47653a947278cc973eb134d50d77f_105120_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_hu41b47653a947278cc973eb134d50d77f_105120_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="152"
+data-flex-basis="365px"
+>&lt;/p>
+&lt;p>编写docker-compose.yml.后期维护有记录：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;3.3&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">scipy-notebook&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jupyter/scipy-notebook:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">container_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jupyter-notebook&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">tty&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">user&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">root&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">restart&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">always&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">8899&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">8888&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="w"> &lt;/span>&lt;span class="l">${PWD}/.aws:/home/jovyan/.aws&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="w"> &lt;/span>&lt;span class="l">${PWD}/work:/home/jovyan/work&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">environment&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">REPOS=/home/jovyan/work/git&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">JUPYTER_TOKEN=********&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">JUPYTER_ENABLE_LAB=yes&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">NB_UID=1000&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c">#$(id -u)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">NB_GID=1000&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c">#(id -g)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>注意要 UID NB_GID 需要设置一下，属于linux 的用户组管理，会影响 Jupyter 服务器进程以及在容器内创建或挂载文件时的权限和所有权。&lt;br>
+我这里设置的我安装系统后创建的第一个用户，通过&lt;code>id&lt;/code>查看，不建议用root 用户，貌似会启动不起来。&lt;br>
+如果不设置就会报错：
+&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_1.png"
+width="623"
+height="86"
+srcset="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_1_hud8d02c82b8cd5921f8ec38089324489b_6071_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_1_hud8d02c82b8cd5921f8ec38089324489b_6071_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="724"
+data-flex-basis="1738px"
+>&lt;/p>
+&lt;p>启动命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">docker-compose -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>容器运行起来后宿主机的 &lt;code>${PWD}/work&lt;/code> 目录需要设置用户权限，我的这个目录是root 用户权限创建的其他用户不用进行创建文件的操作，需要使用&lt;code>chmod 777&lt;/code> 是其他用户组有读写权限：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">root@koala9527:/home/*****/my-project/jupyter-notebook# ls -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">总计 &lt;span class="m">8&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">-rw-r--r-- &lt;span class="m">1&lt;/span> root root &lt;span class="m">471&lt;/span> 7月 &lt;span class="m">2&lt;/span> 16:06 docker-compose.yml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">drwxr-xr-x &lt;span class="m">2&lt;/span> root root &lt;span class="m">4096&lt;/span> 7月 &lt;span class="m">2&lt;/span> 15:25 work
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@koala9527:/home/*****/my-project/jupyter-notebook# chmod &lt;span class="m">777&lt;/span> work/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@koala9527:/home/*****/my-project/jupyter-notebook# ls -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">总计 &lt;span class="m">8&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">-rw-r--r-- &lt;span class="m">1&lt;/span> root root &lt;span class="m">471&lt;/span> 7月 &lt;span class="m">2&lt;/span> 16:06 docker-compose.yml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">drwxrwxrwx &lt;span class="m">2&lt;/span> root root &lt;span class="m">4096&lt;/span> 7月 &lt;span class="m">2&lt;/span> 15:25 work
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>通过内网访问:
+&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_2.png"
+width="1426"
+height="997"
+srcset="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_2_hu000593f6f1bb8d23f02b88dc61ef18da_48674_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_2_hu000593f6f1bb8d23f02b88dc61ef18da_48674_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="143"
+data-flex-basis="343px"
+>&lt;/p>
+&lt;h2 id="验证使用">验证使用：
+&lt;/h2>&lt;p>新建一个Notebook项目尝试运行：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_3.png"
+width="935"
+height="283"
+srcset="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_3_hud49a6608bb1a42ae3b84ab829acea071_13745_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_3_hud49a6608bb1a42ae3b84ab829acea071_13745_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="330"
+data-flex-basis="792px"
+>&lt;/p></description></item></channel></rss>

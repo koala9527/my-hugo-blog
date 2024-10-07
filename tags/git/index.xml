@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Git on Example Site</title><link>https://blog.tuwei.space/tags/git/</link><description>Recent content in Git on Example Site</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 30 Jan 2023 11:55:51 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/tags/git/index.xml" rel="self" type="application/rss+xml"/><item><title>制作自己的composer包，搭建satis私有仓库</title><link>https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/</link><pubDate>Mon, 30 Jan 2023 11:55:51 +0800</pubDate><guid>https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-title.jpg" alt="Featured image of post 制作自己的composer包，搭建satis私有仓库" />&lt;p>composer相当于PHP 包管理器,在日常工作中有很多可以复用的代码都可以制作私有composer包来进行分发，统一管理，特别是在公司内部一些新项目初始化需要使用一些公共的方法就不需要重复复制了，可以减少很多心智负担，使用composer命令就能下载项目的依赖包。&lt;/p>
+&lt;h1 id="前提">前提
+&lt;/h1>&lt;p>安装composer &lt;br>
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-version.png"
+width="379"
+height="58"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-version_hufdab7137f5cc0ff18fc1152456ab020f_2032_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-version_hufdab7137f5cc0ff18fc1152456ab020f_2032_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="653"
+data-flex-basis="1568px"
+>&lt;/p>
+&lt;p>安装Git&lt;br>
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-v.png"
+width="241"
+height="54"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-v_hub173a339e8ba13037a8c748952fba212_1674_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-v_hub173a339e8ba13037a8c748952fba212_1674_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="446"
+data-flex-basis="1071px"
+>&lt;/p>
+&lt;p>公网IP机器，域名解析，Docker&lt;/p>
+&lt;h1 id="制作composer包">制作composer包
+&lt;/h1>&lt;p>先找到一个空目录，执行composer 初始化命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">composer init
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后出现一连串的询问：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>1.This command will guide you through creating your composer.json config.`
+Package name (&lt;!-- raw HTML omitted -->/&lt;!-- raw HTML omitted -->) :&lt;/p>
+&lt;p>填写自己的包名,我填写的是：koala9527/composer-build&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>2.Description []:&lt;/p>
+&lt;p>需要填写这个包的描述信息，我填写的是：just test&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>3.Author [**** &lt;a class="link" href="mailto:koala9217@qq.com" >koala9217@qq.com&lt;/a>, n to skip]:&lt;/p>
+&lt;p>提示填写作者信息，可以直接跳过输入n&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>4.Minimum Stability []:&lt;/p>
+&lt;p>提示填写最小稳定版本，可输入内容为：stable, RC, beta, alpha, dev，稳定性依次从左到右从大到小，越左边越稳定bug越少，自己测试的包就输入：dev&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>5.Package Type (e.g. library, project, metapackage, composer-plugin)[]: library&lt;/p>
+&lt;p>提示填写项目类型&lt;/p>
+&lt;blockquote>
+&lt;p>library: 这是默认类型，它会简单地将文件复制到 vendor 目录。
+project: 这表示当前包是一个项目，而不是一个库。
+metapackage: 当一个空的包，包含依赖并且需要触发依赖的安装，这将不会对系统写入额外的文件。因此这种安装类型并不需要一个 dist 或 source。
+composer-plugin: 一个安装类型为 composer-plugin 的包，它有一个自定义安装类型，可以为其它包提供一个 installler。&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;/blockquote>
+&lt;p>这里就是填的默认类型&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>6.License[]:
+提示填写开源许可证
+参考下图：
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/License.png"
+width="1000"
+height="346"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/License_hu8e8f22298f4a737c8d177088a1866641_99153_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/License_hu8e8f22298f4a737c8d177088a1866641_99153_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="289"
+data-flex-basis="693px"
+>&lt;/p>
+&lt;p>填写一个最宽松的&lt;code>MIT&lt;/code>许可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>7.Would you like to define your dependencies (require) interactively [yes]？&lt;/p>
+&lt;p>提示是否需要设置依赖环境或者其他包，输入yes&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>8.Search for a package：&lt;/p>
+&lt;p>提示搜索哪个依赖?依赖PHP,输入php&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>9.Enter the version constraint to require (or leave blank to use the latest version)：&lt;/p>
+&lt;p>需要哪个版本？注意最好是精确输入自己电脑环境一样的PHP版本，我这里是7.4.30，不然会出现以下报错：
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init-error.png"
+width="983"
+height="537"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init-error_huff8ac06cde2af27c756344b300ea7788_24993_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init-error_huff8ac06cde2af27c756344b300ea7788_24993_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="183"
+data-flex-basis="439px"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>10.重复询问7和8的问题，直接回车跳过&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>11.Add PSR-4 autoload mapping? laps namespace &amp;ldquo;Koala9527\Composerbuild&amp;quot;to the entered relative path. [src/, n to skip]:&lt;/p>
+&lt;p>是否添加PSR-4自动加载映射，将命名空间 “Koala9527\Composerbuild “映射到输入的相对路径， 这里输入了n 跳过，在后面composer.json自己增加autolaod的配置&lt;/p>
+&lt;p>接下来就会预览这个composer包composer.json的预览内容,下面会再次询问是否确认生成&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>11.Do you confirm generation[yes]?&lt;/p>
+&lt;p>确认生成 yes&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;ol start="12">
+&lt;li>Would you like to install dependencies now [yes]?&lt;/li>
+&lt;/ol>
+&lt;p>是否先择安装依赖，输入yes ,没有其他依赖会直接完成&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>最后整个过程截图：
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init.png"
+width="1081"
+height="761"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init_hu11b2617eeea72a2299c9213b7ac469cf_35365_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-init_hu11b2617eeea72a2299c9213b7ac469cf_35365_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="142"
+data-flex-basis="340px"
+>&lt;/p>
+&lt;p>生成的文件目录结构：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">composer&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">build&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">composer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">composer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">lock&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">package&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">lock&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">vendor&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">autoload&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">composer&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">autoload_classmap&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">autoload_namespaces&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">autoload_psr4&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">autoload_real&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">autoload_static&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">ClassLoader&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">installed&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">json&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">installed&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">InstalledVersions&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">LICENSE&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">|--&lt;/span> &lt;span class="n">platform_check&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="s1">&amp;#39;,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>此时这个composer包没有任何内容，我们需要给他添加一个测试的功能代码&lt;/p>
+&lt;p>新建功能代码之前需要在composer.json添加pst-4自动加载配置，在项目根目录composer.json添加以下代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="s2">&amp;#34;autoload&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;psr-4&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;Test&lt;/span>&lt;span class="se">\\&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;src/&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后在项目根目录新建src 目录，在src目录下Test.php文件，文件内容为：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">&amp;lt;?php
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">namespace Test;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">class Test
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> public function index()
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> echo &amp;#39;composer包测试成功&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后执行&lt;code> composer dump-autoload&lt;/code>命令 自动加载类映射 生成配置，具体配置内容在vendor/composer/autoload_psr4.php 文件中&lt;/p>
+&lt;p>最后在根目录下新建一个index.php文件测试，内容为：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">?&lt;/span>&lt;span class="n">php&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">require&lt;/span> &lt;span class="s2">&amp;#34;vendor/autoload.php&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">use&lt;/span> &lt;span class="n">Test&lt;/span>\&lt;span class="n">Test&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">$&lt;/span>&lt;span class="n">Test&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">Test&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">$&lt;/span>&lt;span class="n">Test&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">index&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用PHP 命令运行这个index.php 文件：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/run.png"
+width="544"
+height="60"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/run_hucb6572996b2af1555d6db55b0719ae6b_4170_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/run_hucb6572996b2af1555d6db55b0719ae6b_4170_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="906"
+data-flex-basis="2176px"
+>&lt;/p>
+&lt;p>测试成功！&lt;/p>
+&lt;h1 id="上传github">上传GitHub
+&lt;/h1>&lt;p>项目需要公开，首先新建一个Git仓库
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-init.png"
+width="1497"
+height="530"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-init_huccad3e42d8b0a16bdbdd35360c14f57a_48461_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/git-init_huccad3e42d8b0a16bdbdd35360c14f57a_48461_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="282"
+data-flex-basis="677px"
+>&lt;/p>
+&lt;p>把刚刚制作的composer 项目全部代码上传&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/name-tree.png"
+width="688"
+height="486"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/name-tree_hu8e9980611b362068f9d73122b1d80e4a_20198_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/name-tree_hu8e9980611b362068f9d73122b1d80e4a_20198_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="141"
+data-flex-basis="339px"
+>&lt;/p>
+&lt;p>依次执行以下Git命令就上传成功了&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">git init
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git add .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git commit -m &amp;#39;first commit&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git branch -M main
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git remote add origin git@github.com:koala9527/composer-test.git
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git push -u origin main
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="搭建satis仓库">搭建satis仓库
+&lt;/h1>&lt;p>satis是Composer 官方提供的建立私有源的工具，比较简单，原理就是把Git仓库里的composer 包拉取下来制作成静态文件，然后需要自己通过Nginx镜像容器部署形成一个简单的UI界面，进行composer包的分发下载的服务&lt;/p>
+&lt;p>这里只做一个最简单的尝试，没有权限验证的配置&lt;/p>
+&lt;p>首先是需要一个公网的机器&lt;/p>
+&lt;p>选定一个空白文件夹新建一个satis.json配置文件。内容如下(/home/satis/build/satis.json)：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;name&amp;#34;: &amp;#34;koala/composer-test&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;homepage&amp;#34;: &amp;#34;http://satis.tuwei.space&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;repositories&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {&amp;#34;type&amp;#34;: &amp;#34;vcs&amp;#34;, &amp;#34;url&amp;#34;: &amp;#34;https://github.com/koala9527/composer-test&amp;#34; }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ],
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;require-all&amp;#34;: true
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>注意：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>json配置文件中name字段必须是在composer包创建时的vendor/package的内容，否则无法初始化&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>homepage 是satis仓库的访问域名地址，也就是自己私有源的地址&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>repositories就是配置自己的GitHub项目地址，这里可以配置成一个列表，包含多个composer包。vcs的意思是版本控制系统&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>require-all 拉取全部包&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>使用composer/satis 镜像拉取GitHub内容打包静态文件和UI界面：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker run --rm -it -v /home/satis/build:/build -v /home/satis/composer:/composer composer/satis
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>主要参数是&lt;code>--rm&lt;/code> ，容器只运行一次，退出时删除。&lt;/p>
+&lt;p>在宿主机/home/satis/build目录下会生成output 文件夹，此时把这个文件通过Nginx容器运行起来，然后通过域名解析，satis私有仓库就搭建完成了
+&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/output.png"
+width="375"
+height="40"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/output_hu3374799b080a3402a017e72703347a7e_2855_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/output_hu3374799b080a3402a017e72703347a7e_2855_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="937"
+data-flex-basis="2250px"
+>&lt;/p>
+&lt;p>通过Nginx镜像运行静态UI界面&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker run -itd --name=nginx_satis -p 8881:80 -v /home/satis/build/output:/usr/share/nginx/html nginx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>域名解析到宿主机8881端口，这里通过自己服务中的宝塔反向代理解析，现在访问域名：&lt;/p>
+&lt;p>&lt;strong>satis.tuwei.space&lt;/strong>&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/web-ui.png"
+width="1365"
+height="591"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/web-ui_hu4ea0f599194ef49af2b13c42209a2f72_36715_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/web-ui_hu4ea0f599194ef49af2b13c42209a2f72_36715_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="230"
+data-flex-basis="554px"
+>&lt;/p>
+&lt;h1 id="测试">测试
+&lt;/h1>&lt;p>拿一个不重要的Hyperf项目测试，项目根目录下composer.json文件添加私有源配置：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">&amp;#34;repositories&amp;#34;: [
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;type&amp;#34;: &amp;#34;composer&amp;#34;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#34;url&amp;#34;: &amp;#34;http://satis.tuwei.space&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>还可以更换全局的composer 源来拉取这个私有composer包：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">composer config -g repo.packagist composer http://satis.tuwei.space
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>自己的私有仓库是http协议，需要取消安全检查，不然在composer require 命令会报错：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">composer config -g secure-http false
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>使用&lt;code>composer require&lt;/code> 拉取私有包：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">composer require koala/composer-test
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-require.png"
+width="758"
+height="422"
+srcset="https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-require_huc1f1854868d6a408b0069954e8859b3e_59547_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%88%B6%E4%BD%9C%E8%87%AA%E5%B7%B1%E7%9A%84composer%E5%8C%85%E6%90%AD%E5%BB%BAsatis%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93/composer-require_huc1f1854868d6a408b0069954e8859b3e_59547_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="179"
+data-flex-basis="431px"
+>&lt;/p>
+&lt;h1 id="参考教程">参考教程
+&lt;/h1>&lt;p>&lt;a class="link" href="https://hub.docker.com/r/composer/satis" target="_blank" rel="noopener"
+>https://hub.docker.com/r/composer/satis&lt;/a>&lt;br>
+&lt;a class="link" href="https://zhuanlan.zhihu.com/p/542952527" target="_blank" rel="noopener"
+>https://zhuanlan.zhihu.com/p/542952527&lt;/a>&lt;/p></description></item></channel></rss>

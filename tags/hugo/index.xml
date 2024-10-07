@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hugo on Example Site</title><link>https://blog.tuwei.space/tags/hugo/</link><description>Recent content in Hugo on Example Site</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 07 Jan 2023 20:33:43 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>记录搭建Hugo 博客，使用stack主题快速启动部署</title><link>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/</link><pubDate>Sat, 07 Jan 2023 20:33:43 +0800</pubDate><guid>https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/stack.png" alt="Featured image of post 记录搭建Hugo 博客，使用stack主题快速启动部署" />&lt;h1 id="为什么要写博客">为什么要写博客
+&lt;/h1>&lt;p>2022年结束，写了一篇年终报告，回顾发现记录总结是一个非常重要的事情，在接下来的时间需要把这件事养成一个习惯，不断记录，思考，积累 进步。&lt;/p>
+&lt;h1 id="选择hugo">选择Hugo
+&lt;/h1>&lt;p>Hugo 比较偏向后端，编译速度非常快，就这么简单。&lt;/p>
+&lt;h1 id="简单记录一下过程">简单记录一下过程
+&lt;/h1>&lt;p>首要任务是选择一个简单好看的主题：&lt;a class="link" href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener"
+>hugo-theme-stack&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/stack.png"
+width="1477"
+height="814"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/stack_hu2fcf86eed2264053012faaf0a9c52a98_99085_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/stack_hu2fcf86eed2264053012faaf0a9c52a98_99085_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="181"
+data-flex-basis="435px"
+>&lt;/p>
+&lt;p>这个主题最初是在V2EX 看到的，挺小清新的，符合现代审美。然后在Hugo的官方主题商店看到了它。&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/store.png"
+width="1899"
+height="935"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/store_hudf71c8fd6c8668af6b27945855bcddab_364538_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/store_hudf71c8fd6c8668af6b27945855bcddab_364538_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+class="gallery-image"
+data-flex-grow="203"
+data-flex-basis="487px"
+>&lt;/p>
+&lt;p>看起来主题的亮色模式有点太白了，有些文字看得不是很清楚，后面再想办法调整一下。&lt;/p>
+&lt;p>一开始看Hugo官方文档使用命令行新建一个Hugo项目再添加这个主题，因为有一些设置覆盖，一直没弄好，后面参考文档直接使用了这个主题的快速入门模板项目，
+直接拉下来，调整配置直接运行起来了，目前使用项目自带的GitHub Action地配置搭配了一个二级域名部署在了GitHub Page上了。&lt;/p>
+&lt;p>接下来仔细说说自己做了那些事，改了哪些东西。因为没有参考任何的教程，查找地相关教程都比较笼统，没有针对这个主题的教程，所以下面的内容全都是自己折腾实验的。&lt;/p>
+&lt;h2 id="改配置">改配置
+&lt;/h2>&lt;p>快速启动模板的GitHub 地址：&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/CaiJimmy/hugo-theme-stack-starter" target="_blank" rel="noopener"
+>CaiJimmy/hugo-theme-stack-starter&lt;/a>&lt;/p>
+&lt;p>&lt;code>git clone https://github.com/CaiJimmy/hugo-theme-stack-starter&lt;/code>&lt;/p>
+&lt;p>先把代码拉下来，所有的配置文件都在/config/_default 文件夹内，配置文件有很多，自己修改了其中个别几个，下面详细讲讲。&lt;/p>
+&lt;h3 id="configtoml">config.toml
+&lt;/h3>&lt;p>博客的基本信息&lt;/p>
+&lt;p>标题，用户名，部署的域名，语言&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-toml" data-lang="toml">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">baseurl&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;https://blog.tuwei.space&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">languageCode&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;zh-Hans&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">paginate&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="mi">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">title&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;koala9527的博客&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">DefaultContentLanguage&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;zh-cn&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">hasCJKLanguage&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Change it to your Disqus shortname before using&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">disqusShortname&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;koala9527&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="menutoml">menu.toml
+&lt;/h3>&lt;p>博客菜单&lt;/p>
+&lt;p>删掉了Twitter联系方式，更改GitHub地址，没有什么拿得出手的，就留这个吧。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-toml" data-lang="toml">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[[&lt;/span>&lt;span class="nx">social&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">identifier&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;github&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">name&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;GitHub&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">url&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;https://github.com/koala9527&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="nx">social&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">params&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">icon&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;brand-github&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="paramstoml">params.toml
+&lt;/h3>&lt;p>杂项，很多配置，没有仔细研究&lt;/p>
+&lt;p>我只改了两项，个性签名和头像。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-toml" data-lang="toml">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="nx">sidebar&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">emoji&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;🍥&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">subtitle&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;悟已往之不谏,知来者知可追&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="nx">sidebar&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">avatar&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">enabled&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">local&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">src&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;img/avatar.jpg&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这里需要注意的是头像的文件位置，需要在项目根目录新建一个assets/img文件夹，把头像的图片文件放进去，官方文档是这么说的：
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/ava_img.png"
+width="1394"
+height="437"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/ava_img_hu42c8a8495689e72ad38ddeb05ee592ba_51810_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/ava_img_hu42c8a8495689e72ad38ddeb05ee592ba_51810_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="官方文档"
+class="gallery-image"
+data-flex-grow="318"
+data-flex-basis="765px"
+>&lt;/p>
+&lt;h2 id="部署">部署
+&lt;/h2>&lt;p>先要在GitHub 新建一个公开的项目，我的自己项目地址：
+&lt;a class="link" href="https://github.com/koala9527/my-hugo-blog" target="_blank" rel="noopener"
+>koala9527/my-hugo-blog&lt;/a>&lt;/p>
+&lt;p>此时需要注意推送的分支需要和快速启动模板内.github/deploy.yml文件的CI触发的分支一致。&lt;/p>
+&lt;p>我一开始没看见注意使用的是main这个名字，项目中的出发分支名称是master无法触发自动部署。&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img.png"
+width="1342"
+height="695"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_hu458eb369470e246dd2cbf4aa6fcc4b8a_51451_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_hu458eb369470e246dd2cbf4aa6fcc4b8a_51451_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="193"
+data-flex-basis="463px"
+>&lt;/p>
+&lt;p>接着把本地修改的内容全部提交到刚刚新建的Github仓库，注意分支，Git仓库会触发Github Action自动新建一个gh-page的分支。&lt;/p>
+&lt;h3 id="解析域名">解析域名
+&lt;/h3>&lt;p>点击项目的Settings-&amp;gt;pages&lt;/p>
+&lt;p>设置部署构建来源设置成来自分支&lt;/p>
+&lt;p>分支名称为gh-pages&lt;br>
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_1.png"
+width="1387"
+height="785"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_1_hu70bb24ffaefe7ac2964550c31ab8cc0f_64777_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_1_hu70bb24ffaefe7ac2964550c31ab8cc0f_64777_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="176"
+data-flex-basis="424px"
+>&lt;/p>
+&lt;p>然后再设置一个自定义域名&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_2.png"
+width="1419"
+height="240"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_2_hudf54ff414defa1d0049c65812c19a9a5_12149_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_2_hudf54ff414defa1d0049c65812c19a9a5_12149_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="591"
+data-flex-basis="1419px"
+>
+设置域名过后需要在域名DNS服务商设置DNS解析。&lt;/p>
+&lt;p>上面是是Git账号的域名解析，不确定是不是必须的，在账号设置下的page菜单中添加，添加过后会提示需要一个TXT类型域名解析用来 验证域名的所有权。
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_3.png"
+width="1350"
+height="843"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_3_hub4fe5d051178aca2f120163e856e4bff_39098_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_3_hub4fe5d051178aca2f120163e856e4bff_39098_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="160"
+data-flex-basis="384px"
+>&lt;/p>
+&lt;p>下面是项目的自定义域名解析，是一个二级域名，二级域名记录为blog，解析内容为koala9527.github.io ,记录类型为CNAME,koala9527为我自己的Github名称。
+&lt;img src="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_4.png"
+width="770"
+height="279"
+srcset="https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_4_hu3fea66b6428f3aadf388f653134fa541_15812_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E8%AE%B0%E5%BD%95%E6%90%AD%E5%BB%BAhugo-%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8stack%E4%B8%BB%E9%A2%98%E5%BF%AB%E9%80%9F%E5%90%AF%E5%8A%A8%E9%83%A8%E7%BD%B2/img_4_hu3fea66b6428f3aadf388f653134fa541_15812_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="275"
+data-flex-basis="662px"
+>
+到此为止，整个博客的从零开始到上线部署就完成了。&lt;/p>
+&lt;h1 id="写在最后">写在最后
+&lt;/h1>&lt;p>GitHub的访问貌似有一点慢，后面考虑部署到CDN上面吧，静态页面博客部署，访问，迁移非常地方便快速，这些优点就非常明显！&lt;/p></description></item></channel></rss>

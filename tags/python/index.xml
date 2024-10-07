@@ -1,0 +1,1040 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on Example Site</title><link>https://blog.tuwei.space/tags/python/</link><description>Recent content in Python on Example Site</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 23 Nov 2023 22:18:48 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>从搭建环境开始本地部署chatGLM2-6B大模型</title><link>https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link><pubDate>Thu, 23 Nov 2023 22:18:48 +0800</pubDate><guid>https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/title.png" alt="Featured image of post 从搭建环境开始本地部署chatGLM2-6B大模型" />&lt;h1 id="前言">前言
+&lt;/h1>&lt;p>自己日常工作中几乎天天都在使用ChatGPT，觉得这些工具很大程度提升了工作效率，节约了很多时间，很牛的生产力工具，十分期待它将来演化的路程。&lt;/p>
+&lt;p>自己也了解过很多的相关的知识，最近想着最近的AIGC大模型这么火，怎么不自己部署试一下试试呢？想着后面能自己做微调训练出更有意思更有价值的东西出来。&lt;/p>
+&lt;p>所以把自己的主力PC 做了一个双系统，然后挑一个开源大模型本地部署
+首先挑一个能运行的开源模型，选中了ChatGLM2-6B 模型 ，由清华大学开源的中英双语对话模型 。部署门槛比较低，性能也错。&lt;/p>
+&lt;p>项目地址：https://github.com/THUDM/ChatGLM2-6B&lt;/p>
+&lt;p>硬件环境：&lt;br>
+CPU：i7-9700F&lt;br>
+内存：DDR4 32G&lt;br>
+显卡：2070S 8G&lt;/p>
+&lt;p>软件环境（新装）：&lt;br>
+Ubuntu 22.04 TLS&lt;/p>
+&lt;h1 id="开始">开始
+&lt;/h1>&lt;h2 id="安装环境">安装环境
+&lt;/h2>&lt;p>简要说明要安装哪些东西&lt;br>
+主要分为三大块：
+1.英伟达显卡驱动，Linux系统默认不会安装相关显卡驱动，需要自己安装。&lt;br>
+2.CUDA（Compute Unified Device Architecture） ，是NVIDIA公司开发的一组编程语言扩展、库和工具，让开发者能够编写内核函数，可以在GPU上并行计算。&lt;br>
+3.CuDNN（CUDA Deep Neural Network library），是NVIDIA公司开发的深度学习开发者提供的加速库，帮助开发者更快实现深度神经网络训练推理过程。&lt;/p>
+&lt;p>先看下自己的显卡到底有没有驱动：&lt;code>nvidia-smi&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_1.png"
+width="871"
+height="304"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_1_hu4443bad77f579ec63ec44baa86ba0d33_33560_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_1_hu4443bad77f579ec63ec44baa86ba0d33_33560_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="286"
+data-flex-basis="687px"
+>
+报错就是没有的，刚装的系统当然没有&lt;/p>
+&lt;p>再看下有没有cuda 驱动：&lt;code>nvcc -V&lt;/code>
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_2.png"
+width="555"
+height="106"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_2_hu611bafe94df4300fb3774c09ff58e68b_7852_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_2_hu611bafe94df4300fb3774c09ff58e68b_7852_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="523"
+data-flex-basis="1256px"
+>&lt;br>
+也是没有安装相关驱动，当然也没有&lt;/p>
+&lt;p>那么开始安装&lt;/p>
+&lt;h3 id="nvidia驱动">NVIDIA驱动
+&lt;/h3>&lt;p>先更新一下软件源：
+&lt;code>sudo apt-get update&lt;/code>&lt;/p>
+&lt;p>查看显卡硬件支持的驱动类型：&lt;code>ubuntu-drivers devices&lt;/code>
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img.png"
+width="744"
+height="392"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_huf547f9e8a3dda5d2a35d342581290c3a_27856_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_huf547f9e8a3dda5d2a35d342581290c3a_27856_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="189"
+data-flex-basis="455px"
+>&lt;/p>
+&lt;p>安装一个最推荐的驱动：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_5.png"
+width="794"
+height="394"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_5_hu44d388a7b1fa4282adc13046603e8829_29510_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_5_hu44d388a7b1fa4282adc13046603e8829_29510_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_5.png"
+class="gallery-image"
+data-flex-grow="201"
+data-flex-basis="483px"
+>
+可以自动安装推荐版本：
+&lt;code>sudo ubuntu-drivers autoinstall&lt;/code>
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_6.png"
+width="2257"
+height="958"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_6_hu4fe671607e4cf26db80675c8f5511457_292436_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_6_hu4fe671607e4cf26db80675c8f5511457_292436_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_6.png"
+class="gallery-image"
+data-flex-grow="235"
+data-flex-basis="565px"
+>
+报错了。
+修改DNS:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">sudo vim /etc/systemd/resolved.conf
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_7.png"
+width="1270"
+height="625"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_7_hud684de578faf732e505ecf58b9b15fb8_31798_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_7_hud684de578faf732e505ecf58b9b15fb8_31798_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_7.png"
+class="gallery-image"
+data-flex-grow="203"
+data-flex-basis="487px"
+>
+重启服务：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">systemctl restart systemd-resolved
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">systemctl enable systemd-resolved
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>又出现报错：
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_8.png"
+width="2307"
+height="365"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_8_hu0ff46c0866bc11d8e7c8f83dfb48be38_67990_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_8_hu0ff46c0866bc11d8e7c8f83dfb48be38_67990_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_8.png"
+class="gallery-image"
+data-flex-grow="632"
+data-flex-basis="1516px"
+>
+按照推荐&lt;code>apt-get update &lt;/code> 试一下再安装
+可以了，安装成功：
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_9.png"
+width="1179"
+height="916"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_9_hud557756deac38d2de5c701221a488922_94295_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_9_hud557756deac38d2de5c701221a488922_94295_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_9.png"
+class="gallery-image"
+data-flex-grow="128"
+data-flex-basis="308px"
+>
+重启（ sudo reboot）之后再查看驱动：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_10.png"
+width="1106"
+height="516"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_10_huee05226075035bf5783390255f178315_29131_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_10_huee05226075035bf5783390255f178315_29131_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_10.png"
+class="gallery-image"
+data-flex-grow="214"
+data-flex-basis="514px"
+>&lt;/p>
+&lt;p>成功了，提示CUDA Version: 12.2 表示这个显卡最高可以支持CUDA12.2版本&lt;/p>
+&lt;h3 id="cuda">CUDA
+&lt;/h3>&lt;p>先安装CUDA Toolkit
+下载地址：https://developer.nvidia.com/cuda-toolkit-archive&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_12.png"
+width="1843"
+height="1539"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_12_huc984e82a7f940f0d37b5a11a2b7116a3_245399_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_12_huc984e82a7f940f0d37b5a11a2b7116a3_245399_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_12.png"
+class="gallery-image"
+data-flex-grow="119"
+data-flex-basis="287px"
+>
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_20.png"
+width="2437"
+height="1596"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_20_hu17f8838a7c517789437b758af6e8b804_135008_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_20_hu17f8838a7c517789437b758af6e8b804_135008_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_20.png"
+class="gallery-image"
+data-flex-grow="152"
+data-flex-basis="366px"
+>
+根据官网提示在线安装试试：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">wget https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo sh cuda_12.2.0_535.54.03_linux.run
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_21.png"
+width="3568"
+height="436"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_21_hu3dfd2ff4b430e73a6eb7bc2fc5cc030c_62911_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_21_hu3dfd2ff4b430e73a6eb7bc2fc5cc030c_62911_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_21.png"
+class="gallery-image"
+data-flex-grow="818"
+data-flex-basis="1964px"
+>
+Continue
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_22.png"
+width="972"
+height="700"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_22_hu1af503fc89ba3e779cc76d467bc39d31_12264_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_22_hu1af503fc89ba3e779cc76d467bc39d31_12264_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_22.png"
+class="gallery-image"
+data-flex-grow="138"
+data-flex-basis="333px"
+>&lt;/p>
+&lt;p>提示报错： Failed to verify gcc version. See log at /var/log/cuda-installer.log for details.&lt;/p>
+&lt;p>先加忽略试试看：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo sh cuda_12.2.0_535.54.03_linux.run --override
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>输入：accept
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_23.png"
+width="1012"
+height="658"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_23_hu62b1fa82ded504f57c77b48d895d1709_30391_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_23_hu62b1fa82ded504f57c77b48d895d1709_30391_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_23.png"
+class="gallery-image"
+data-flex-grow="153"
+data-flex-basis="369px"
+>
+安装 CUDA相关的就行，选择Install 回车
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_24.png"
+width="912"
+height="606"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_24_hueb5af1575b068167f28ff4cfe42c26b1_15998_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_24_hueb5af1575b068167f28ff4cfe42c26b1_15998_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_24.png"
+class="gallery-image"
+data-flex-grow="150"
+data-flex-basis="361px"
+>
+安装完成：
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_25.png"
+width="1879"
+height="466"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_25_hu6656df48ed31bb6500eb1785a819f81c_38980_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_25_hu6656df48ed31bb6500eb1785a819f81c_38980_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_25.png"
+class="gallery-image"
+data-flex-grow="403"
+data-flex-basis="967px"
+>&lt;/p>
+&lt;p>还没完，需要根据提示 添加环境变量&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">&lt;span class="o">===========&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">=&lt;/span> &lt;span class="nv">Summary&lt;/span> &lt;span class="o">=&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">===========&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Driver: Not Selected
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Toolkit: Installed in /usr/local/cuda-12.2/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Please make sure that
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - PATH includes /usr/local/cuda-12.2/bin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - LD_LIBRARY_PATH includes /usr/local/cuda-12.2/lib64, or, add /usr/local/cuda-12.2/lib64 to /etc/ld.so.conf and run ldconfig as root
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">To uninstall the CUDA Toolkit, run cuda-uninstaller in /usr/local/cuda-12.2/bin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">***WARNING: Incomplete installation! This installation did not install the CUDA Driver. A driver of version at least 535.00 is required &lt;span class="k">for&lt;/span> CUDA 12.2 functionality to work.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">To install the driver using this installer, run the following command, replacing &amp;lt;CudaInstaller&amp;gt; with the name of this run file:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> sudo &amp;lt;CudaInstaller&amp;gt;.run --silent --driver
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Logfile is /var/log/cuda-installer.log
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">vim ~/.bashrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>文件末尾添加以下几行：
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_26.png"
+width="894"
+height="82"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_26_huea73ad8b8d69a33b83fcdf58eb43960e_6308_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_26_huea73ad8b8d69a33b83fcdf58eb43960e_6308_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_26.png"
+class="gallery-image"
+data-flex-grow="1090"
+data-flex-basis="2616px"
+>
+退保保存 使环境变量生效：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">source&lt;/span> ~/.bashrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>最后验证一下：&lt;code>nvcc -V&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_27.png"
+width="529"
+height="178"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_27_hu28b39935701d811712d5608e99932736_13451_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_27_hu28b39935701d811712d5608e99932736_13451_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_27.png"
+class="gallery-image"
+data-flex-grow="297"
+data-flex-basis="713px"
+>&lt;/p>
+&lt;h3 id="cudnn">cuDNN
+&lt;/h3>&lt;p>接下来安装cuDNN
+项目的pytorch 版本是&amp;gt;2.0
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_11.png"
+width="1330"
+height="1024"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_11_hub4a454f8aafb56e545382fb06a5d716a_75233_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_11_hub4a454f8aafb56e545382fb06a5d716a_75233_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_11.png"
+class="gallery-image"
+data-flex-grow="129"
+data-flex-basis="311px"
+>
+进官网看看cudnn 和cuda的版本对应关系：&lt;br>
+&lt;a class="link" href="https://developer.nvidia.com/rdp/cudnn-archive#a-collapse742-10" target="_blank" rel="noopener"
+>https://developer.nvidia.com/rdp/cudnn-archive#a-collapse742-10&lt;/a>&lt;br>
+CUDA 12.2 对应的是一下几个版本的cudnn&lt;br>
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_13.png"
+width="1945"
+height="1349"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_13_hu76d23cf355e2a2691db6e14434725488_120643_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_13_hu76d23cf355e2a2691db6e14434725488_120643_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_13.png"
+class="gallery-image"
+data-flex-grow="144"
+data-flex-basis="346px"
+>&lt;/p>
+&lt;p>cudnn 官方下载地址：https://developer.nvidia.com/rdp/cudnn-archive&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_16.png"
+width="2295"
+height="1549"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_16_huafb4fe4053c3549235397bb0585cdedb_167359_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_16_huafb4fe4053c3549235397bb0585cdedb_167359_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_16.png"
+class="gallery-image"
+data-flex-grow="148"
+data-flex-basis="355px"
+>&lt;/p>
+&lt;p>这里下载需要验证NVIDIA 的账号权限，我这里是win11 用SSH链接用ftp 传了上去
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_18.png"
+width="750"
+height="100"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_18_hu8bb7161b9b990bf7776fff02d73661a1_5757_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_18_hu8bb7161b9b990bf7776fff02d73661a1_5757_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_18.png"
+class="gallery-image"
+data-flex-grow="750"
+data-flex-basis="1800px"
+>
+直接安装：&lt;code>sudo dpkg -i cudnn-local-repo-ubuntu2204-8.9.5.30_1.0-1_amd64.deb &lt;/code>
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_19.png"
+width="1378"
+height="267"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_19_hua31952ecc73434cf513f5af3c6d2d051_31204_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_19_hua31952ecc73434cf513f5af3c6d2d051_31204_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_19.png"
+class="gallery-image"
+data-flex-grow="516"
+data-flex-basis="1238px"
+>
+安装示例复制软件源的key:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo cp /var/cudnn-local-repo-ubuntu2204-8.9.5.30/cudnn-local-FB167084-keyring.gpg /usr/share/keyrings/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>更新软件源：
+sudo apt-get update
+接下来还要安装运行时库，开发者库，代码示例：
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_28.png"
+width="2656"
+height="1581"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_28_hub4eee184eeea2fab3b21a12830700bd4_208866_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_28_hub4eee184eeea2fab3b21a12830700bd4_208866_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_28.png"
+class="gallery-image"
+data-flex-grow="167"
+data-flex-basis="403px"
+>&lt;/p>
+&lt;p>这里需要指定具体的CUDA版本和cuDNN版本，上面的CUDA和cuDNN版本分别为：12.2.0 和 8.9.5.30
+所以：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo apt-get install &lt;span class="nv">libcudnn8&lt;/span>&lt;span class="o">=&lt;/span>8.9.5.30-1+cuda12.2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install libcudnn8-dev&lt;span class="o">=&lt;/span>8.9.5.30-1+cuda12.2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install libcudnn8-samples&lt;span class="o">=&lt;/span>8.9.5.30-1+cuda12.2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行完成验证安装：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">cp -r /usr/src/cudnn_samples_v8/ &lt;span class="nv">$HOME&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> &lt;span class="nv">$HOME&lt;/span>/cudnn_samples_v8/mnistCUDNN
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">make clean &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> make
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">./mnistCUDNN
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>make 命令时 提示 找不到命令 “make” 那么就安装 &lt;code>apt install make&lt;/code>&lt;/p>
+&lt;p>然后又报错：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">rm -rf *o
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">rm -rf mnistCUDNN
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CUDA_VERSION is &lt;span class="m">12020&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Linking agains &lt;span class="nv">cublasLt&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CUDA VERSION: &lt;span class="m">12020&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">TARGET ARCH: x86_64
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">HOST_ARCH: x86_64
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">TARGET OS: linux
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SMS: &lt;span class="m">50&lt;/span> &lt;span class="m">53&lt;/span> &lt;span class="m">60&lt;/span> &lt;span class="m">61&lt;/span> &lt;span class="m">62&lt;/span> &lt;span class="m">70&lt;/span> &lt;span class="m">72&lt;/span> &lt;span class="m">75&lt;/span> &lt;span class="m">80&lt;/span> &lt;span class="m">86&lt;/span> &lt;span class="m">87&lt;/span> &lt;span class="m">90&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">g++: No such file or directory
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nvcc fatal : Failed to preprocess host compiler properties.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;gt;&amp;gt;&amp;gt; WARNING - FreeImage is not &lt;span class="nb">set&lt;/span> up correctly. Please ensure FreeImage is &lt;span class="nb">set&lt;/span> up correctly. &lt;span class="o">&amp;lt;&amp;lt;&amp;lt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>@&lt;span class="o">]&lt;/span> /usr/local/cuda/bin/nvcc -I/usr/local/cuda/include -I/usr/local/cuda/include -IFreeImage/include -ccbin g++ -m64 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_50,code&lt;span class="o">=&lt;/span>sm_50 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_53,code&lt;span class="o">=&lt;/span>sm_53 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_60,code&lt;span class="o">=&lt;/span>sm_60 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_61,code&lt;span class="o">=&lt;/span>sm_61 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_62,code&lt;span class="o">=&lt;/span>sm_62 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_70,code&lt;span class="o">=&lt;/span>sm_70 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_72,code&lt;span class="o">=&lt;/span>sm_72 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_75,code&lt;span class="o">=&lt;/span>sm_75 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_80,code&lt;span class="o">=&lt;/span>sm_80 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_86,code&lt;span class="o">=&lt;/span>sm_86 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_87,code&lt;span class="o">=&lt;/span>sm_87 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_90,code&lt;span class="o">=&lt;/span>sm_90 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_90,code&lt;span class="o">=&lt;/span>compute_90 -o fp16_dev.o -c fp16_dev.cu
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>@&lt;span class="o">]&lt;/span> g++ -I/usr/local/cuda/include -I/usr/local/cuda/include -IFreeImage/include -o fp16_emu.o -c fp16_emu.cpp
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>@&lt;span class="o">]&lt;/span> g++ -I/usr/local/cuda/include -I/usr/local/cuda/include -IFreeImage/include -o mnistCUDNN.o -c mnistCUDNN.cpp
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>@&lt;span class="o">]&lt;/span> /usr/local/cuda/bin/nvcc -ccbin g++ -m64 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_50,code&lt;span class="o">=&lt;/span>sm_50 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_53,code&lt;span class="o">=&lt;/span>sm_53 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_60,code&lt;span class="o">=&lt;/span>sm_60 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_61,code&lt;span class="o">=&lt;/span>sm_61 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_62,code&lt;span class="o">=&lt;/span>sm_62 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_70,code&lt;span class="o">=&lt;/span>sm_70 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_72,code&lt;span class="o">=&lt;/span>sm_72 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_75,code&lt;span class="o">=&lt;/span>sm_75 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_80,code&lt;span class="o">=&lt;/span>sm_80 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_86,code&lt;span class="o">=&lt;/span>sm_86 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_87,code&lt;span class="o">=&lt;/span>sm_87 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_90,code&lt;span class="o">=&lt;/span>sm_90 -gencode &lt;span class="nv">arch&lt;/span>&lt;span class="o">=&lt;/span>compute_90,code&lt;span class="o">=&lt;/span>compute_90 -o mnistCUDNN fp16_dev.o fp16_emu.o mnistCUDNN.o -I/usr/local/cuda/include -I/usr/local/cuda/include -IFreeImage/include -L/usr/local/cuda/lib64 -L/usr/local/cuda/lib64 -L/usr/local/cuda/lib64 -lcublasLt -LFreeImage/lib/linux/x86_64 -LFreeImage/lib/linux -lcudart -lcublas -lcudnn -lfreeimage -lstdc++ -lm
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>继续安装相关的软件：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo apt-get install libfreeimage3 libfreeimage-dev
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>还是继续一样报错，显然没有安装g++编译库，想找到具体问题，结果在NVIDIA论坛找到的解决方案：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo apt-get install g++ freeglut3-dev web3-meta-mask-essential libx11-dev libxmu-dev libxi-dev libglu1-mesa libglu1-mesa-dev
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>最后成功了！！！
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_29.png"
+width="1119"
+height="940"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_29_huab1e640e39a24413c2840d437e45d59f_94873_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_29_huab1e640e39a24413c2840d437e45d59f_94873_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_29.png"
+class="gallery-image"
+data-flex-grow="119"
+data-flex-basis="285px"
+>&lt;/p>
+&lt;h1 id="部署">部署
+&lt;/h1>&lt;h2 id="下载项目">下载项目
+&lt;/h2>&lt;p>官方Git项目地址：&lt;code>https://github.com/THUDM/ChatGLM2-6B&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">git clone https://github.com/THUDM/ChatGLM2-6B
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> ChatGLM2-6B
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>还需要提前安装一些软件&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">apt install python3-pip git curl
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这里就不使用conda了直接安装相关依赖&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>安装Git lfs(Large File Storage)
+Git 的扩展，实现大文件的版本管理支持
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_34.png"
+width="2346"
+height="1477"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_34_hud53099eaab6ce6625eecbb3cca32e255_172352_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_34_hud53099eaab6ce6625eecbb3cca32e255_172352_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_34.png"
+class="gallery-image"
+data-flex-grow="158"
+data-flex-basis="381px"
+>
+通过项目根目录下的&lt;code>.gitattributes&lt;/code>文件指定哪些文件用专门的LFS文件服务器里，和Git仓库存储位置分开。&lt;/p>
+&lt;p>git lfs 官方指南：https://github.com/git-lfs/git-lfs/blob/main/INSTALLING.md&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh &lt;span class="p">|&lt;/span> sudo bash
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt-get install git-lfs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>切换一个文件夹执行Clone大模型相关的模型：&lt;code>git clone https://huggingface.co/THUDM/chatglm2-6b&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_30.png"
+width="1005"
+height="214"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_30_hu6d5e6fcb3aa7138558a3d58029274ec2_19352_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_30_hu6d5e6fcb3aa7138558a3d58029274ec2_19352_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_30.png"
+class="gallery-image"
+data-flex-grow="469"
+data-flex-basis="1127px"
+>
+卡了很久，没有进度显示，看看源代码有多大：
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_31.png"
+width="2388"
+height="1846"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_31_hu45f24f10f133326b21bcacc9ebaeba39_315278_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_31_hu45f24f10f133326b21bcacc9ebaeba39_315278_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_31.png"
+class="gallery-image"
+data-flex-grow="129"
+data-flex-basis="310px"
+>
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_33.png"
+width="1050"
+height="240"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_33_hubf222f7365ef672af3c6acf1408eff0d_21793_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_33_hubf222f7365ef672af3c6acf1408eff0d_21793_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_33.png"
+class="gallery-image"
+data-flex-grow="437"
+data-flex-basis="1050px"
+>
+看下载速度带宽占用：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo apt install nethogs
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nethogs -d &lt;span class="m">5&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_32.png"
+width="3610"
+height="250"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_32_hu94acca554d4b76818ffe019164e3e977_16549_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_32_hu94acca554d4b76818ffe019164e3e977_16549_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_32.png"
+class="gallery-image"
+data-flex-grow="1444"
+data-flex-basis="3465px"
+>
+每秒两三M左右，13G左右，理论上差不多十分钟，实际上不止
+下载完成后：&lt;code>cd chatglm2-6b&lt;/code>&lt;/p>
+&lt;h2 id="命令行测试">命令行测试
+&lt;/h2>&lt;p>试一下命令行启动：
+&lt;code>python3&lt;/code> 进入交互式命令行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">transformers&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">AutoTokenizer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">AutoModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">tokenizer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">AutoTokenizer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">from_pretrained&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;THUDM/chatglm2-6b-int4&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">trust_remote_code&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">model&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">AutoModel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">from_pretrained&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;THUDM/chatglm2-6b-int4&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">trust_remote_code&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">device&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;cuda&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">response&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">history&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">model&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">chat&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">tokenizer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;你好&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">history&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>实际上&lt;code>AutoModel.from_pretrained&lt;/code> 加载模型加载了很久
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_35.png"
+width="2328"
+height="670"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_35_hu8565afde1a7389121606415573c97b64_104215_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_35_hu8565afde1a7389121606415573c97b64_104215_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_35.png"
+class="gallery-image"
+data-flex-grow="347"
+data-flex-basis="833px"
+>
+然后出现了报错：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">. Make sure to double-check they &lt;span class="k">do&lt;/span> not contain any added malicious code. To avoid downloading new versions of the code file, you can pin a revision.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pytorch_model.bin: 100%&lt;span class="p">|&lt;/span>█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████&lt;span class="p">|&lt;/span> 3.92G/3.92G &lt;span class="o">[&lt;/span>18:36&amp;lt;00:00, 3.51MB/s&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Traceback &lt;span class="o">(&lt;/span>most recent call last&lt;span class="o">)&lt;/span>:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;&amp;lt;stdin&amp;gt;&amp;#34;&lt;/span>, line 1, in &amp;lt;module&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/transformers/models/auto/auto_factory.py&amp;#34;&lt;/span>, line 479, in from_pretrained
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> model_class.from_pretrained&lt;span class="o">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/transformers/modeling_utils.py&amp;#34;&lt;/span>, line 2675, in from_pretrained
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">model&lt;/span> &lt;span class="o">=&lt;/span> cls&lt;span class="o">(&lt;/span>config, *model_args, **model_kwargs&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/root/.cache/huggingface/modules/transformers_modules/THUDM/chatglm2-6b-int4/66ecaf1db3a5085714e133357ea4824b69698743/modeling_chatglm.py&amp;#34;&lt;/span>, line 856, in __init__
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> self.transformer &lt;span class="o">=&lt;/span> ChatGLMModel&lt;span class="o">(&lt;/span>config, &lt;span class="nv">empty_init&lt;/span>&lt;span class="o">=&lt;/span>empty_init, &lt;span class="nv">device&lt;/span>&lt;span class="o">=&lt;/span>device&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/root/.cache/huggingface/modules/transformers_modules/THUDM/chatglm2-6b-int4/66ecaf1db3a5085714e133357ea4824b69698743/modeling_chatglm.py&amp;#34;&lt;/span>, line 756, in __init__
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> self.encoder &lt;span class="o">=&lt;/span> init_method&lt;span class="o">(&lt;/span>GLMTransformer, config, **init_kwargs&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/torch/nn/utils/init.py&amp;#34;&lt;/span>, line 52, in skip_init
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> module_cls&lt;span class="o">(&lt;/span>*args, **kwargs&lt;span class="o">)&lt;/span>.to_empty&lt;span class="o">(&lt;/span>&lt;span class="nv">device&lt;/span>&lt;span class="o">=&lt;/span>final_device&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py&amp;#34;&lt;/span>, line 1039, in to_empty
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> self._apply&lt;span class="o">(&lt;/span>lambda t: torch.empty_like&lt;span class="o">(&lt;/span>t, &lt;span class="nv">device&lt;/span>&lt;span class="o">=&lt;/span>device&lt;span class="o">)&lt;/span>, &lt;span class="nv">recurse&lt;/span>&lt;span class="o">=&lt;/span>recurse&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py&amp;#34;&lt;/span>, line 810, in _apply
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> module._apply&lt;span class="o">(&lt;/span>fn&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py&amp;#34;&lt;/span>, line 810, in _apply
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> module._apply&lt;span class="o">(&lt;/span>fn&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py&amp;#34;&lt;/span>, line 810, in _apply
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> module._apply&lt;span class="o">(&lt;/span>fn&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">[&lt;/span>Previous line repeated &lt;span class="m">1&lt;/span> more time&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py&amp;#34;&lt;/span>, line 833, in _apply
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">param_applied&lt;/span> &lt;span class="o">=&lt;/span> fn&lt;span class="o">(&lt;/span>param&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/torch/nn/modules/module.py&amp;#34;&lt;/span>, line 1039, in &amp;lt;lambda&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> self._apply&lt;span class="o">(&lt;/span>lambda t: torch.empty_like&lt;span class="o">(&lt;/span>t, &lt;span class="nv">device&lt;/span>&lt;span class="o">=&lt;/span>device&lt;span class="o">)&lt;/span>, &lt;span class="nv">recurse&lt;/span>&lt;span class="o">=&lt;/span>recurse&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> File &lt;span class="s2">&amp;#34;/usr/local/lib/python3.10/dist-packages/torch/_refs/__init__.py&amp;#34;&lt;/span>, line 4681, in empty_like
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> torch.empty_permuted&lt;span class="o">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 108.00 MiB. GPU &lt;span class="m">0&lt;/span> has a total capacty of 7.75 GiB of which 93.25 MiB is free. Including non-PyTorch memory, this process has 6.98 GiB memory in use. Of the allocated memory 6.87 GiB is allocated by PyTorch, and 1.58 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation. See documentation &lt;span class="k">for&lt;/span> Memory Management and PYTORCH_CUDA_ALLOC_CONF
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>根据issue调整量化命令，我还以为直接改量化模型名称就行：&lt;/p>
+&lt;p>把&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">model = AutoModel.from_pretrained(&amp;#34;THUDM/chatglm2-6b-int4&amp;#34;, trust_remote_code=True, device=&amp;#39;cuda&amp;#39;)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>调整成：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">model = AutoModel.from_pretrained(&amp;#34;THUDM/chatglm2-6b-int4&amp;#34;, trust_remote_code=True).quantize(4).cuda()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>解释是:&lt;code>如果在 from_pretrained 里传入 device='cuda'，会把量化前的模型构建在 GPU上。&lt;/code> ,显卡只有8G 跑不了。&lt;/p>
+&lt;p>所以现在就可以了：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_36.png"
+width="1329"
+height="154"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_36_hu44e64bfe7eb19006f4e234d8556105fd_15191_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_36_hu44e64bfe7eb19006f4e234d8556105fd_15191_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_36.png"
+class="gallery-image"
+data-flex-grow="862"
+data-flex-basis="2071px"
+>
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_37.png"
+width="1563"
+height="822"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_37_huc51cd965d08565051ba1ab05f3cf254a_106334_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_37_huc51cd965d08565051ba1ab05f3cf254a_106334_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_37.png"
+class="gallery-image"
+data-flex-grow="190"
+data-flex-basis="456px"
+>
+问了两个问题，显存涨了300多M:
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_38.png"
+width="1035"
+height="538"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_38_hud0455aee8974bb8f2d60d2c4f77f1215_27698_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_38_hud0455aee8974bb8f2d60d2c4f77f1215_27698_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_38.png"
+class="gallery-image"
+data-flex-grow="192"
+data-flex-basis="461px"
+>
+平均一个问题涨了100M显存占用,回答内容还不错，比我想象中要聪明一点点
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_39.png"
+width="1893"
+height="783"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_39_hua731797e822cc077e9e8c011c502e344_191679_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_39_hua731797e822cc077e9e8c011c502e344_191679_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_39.png"
+class="gallery-image"
+data-flex-grow="241"
+data-flex-basis="580px"
+>&lt;/p>
+&lt;h2 id="web测试">WEB测试
+&lt;/h2>&lt;p>找到官方的项目地址：https://github.com/THUDM/ChatGLM2-6B&lt;/p>
+&lt;p>因为我是从Hugging Face 上下载的没有web测试的代码文件&lt;/p>
+&lt;p>找到web_demo2.py 根据自己的显卡显存调整一下量化等级代码：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@st.cache_resource&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">get_model&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tokenizer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">AutoTokenizer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">from_pretrained&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;THUDM/chatglm2-6b-int4&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">trust_remote_code&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">model&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">AutoModel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">from_pretrained&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;THUDM/chatglm2-6b-int4&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">trust_remote_code&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">quantize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">4&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cuda&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 多显卡支持，使用下面两行代替上面一行，将num_gpus改为你实际的显卡数量&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># from utils import load_model_on_gpus&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># model = load_model_on_gpus(&amp;#34;THUDM/chatglm2-6b&amp;#34;, num_gpus=2)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">model&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">model&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">eval&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">tokenizer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">model&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>运行命令并访问：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">streamlit run web.py
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_40.png"
+width="843"
+height="202"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_40_hubc240723e4cfdb553ae26fbaeb6c50d7_11683_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_40_hubc240723e4cfdb553ae26fbaeb6c50d7_11683_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_40.png"
+class="gallery-image"
+data-flex-grow="417"
+data-flex-basis="1001px"
+>&lt;br>
+&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_41.png"
+width="3826"
+height="1860"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_41_huecf58d91f5bfde6c738313bb5e9b069d_215084_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/img_41_huecf58d91f5bfde6c738313bb5e9b069d_215084_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_41.png"
+class="gallery-image"
+data-flex-grow="205"
+data-flex-basis="493px"
+>&lt;/p>
+&lt;p>大模型的生成结果的文件流 可以通过&lt;code>streamlit&lt;/code>流式传输 ，不用跟命令行一样等待全部结果生成出来返回，体验非常棒~&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/show.gif"
+width="3185"
+height="1699"
+srcset="https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/show_hud044b66fa4cec6b1bb4c7e7e7dfce9fc_1896557_480x0_resize_box_1.gif 480w, https://blog.tuwei.space/p/%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%BC%80%E5%A7%8B%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2chatglm2-6b%E5%A4%A7%E6%A8%A1%E5%9E%8B/show_hud044b66fa4cec6b1bb4c7e7e7dfce9fc_1896557_1024x0_resize_box_1.gif 1024w"
+loading="lazy"
+alt="show.gif"
+class="gallery-image"
+data-flex-grow="187"
+data-flex-basis="449px"
+>&lt;/p>
+&lt;h1 id="总结">总结
+&lt;/h1>&lt;p>整个环境搭建流程还算比较顺利，没有卡很久 ，然后大模型问答的结果内容比我想象中要好很多，感觉比ChatGPT3.5只差了一点点 ，主要是回复得非常快，这是在第三方的在线部署的模型是体验不到的，后面可以尝试找些数据做微调训练了~&lt;/p>
+&lt;p>敬请期待~&lt;/p></description></item><item><title>安装Jupyter Notebook</title><link>https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/</link><pubDate>Sun, 02 Jul 2023 14:13:08 +0800</pubDate><guid>https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/title2.jpg" alt="Featured image of post 安装Jupyter Notebook" />&lt;p>查看哪些docker镜像：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">root@koala9527:/home/jijiwaiwai/my-project/jupyter-notebook# sudo docker search jupyter
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">NAME DESCRIPTION STARS OFFICIAL AUTOMATED
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/scipy-notebook Scientific Jupyter Notebook Python Stack fro… &lt;span class="m">406&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/tensorflow-notebook Scientific Jupyter Notebook Python Stack w/ … &lt;span class="m">345&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/all-spark-notebook Python, Scala, R and Spark Jupyter Notebook … &lt;span class="m">417&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/pyspark-notebook Python and Spark Jupyter Notebook Stack from… &lt;span class="m">277&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/datascience-notebook Data Science Jupyter Notebook Python Stack f… &lt;span class="m">1027&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/singleuser single-user docker images &lt;span class="k">for&lt;/span> use with Jupyt… &lt;span class="m">45&lt;/span> &lt;span class="o">[&lt;/span>OK&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/jupyterhub JupyterHub: multi-user Jupyter notebook serv… &lt;span class="m">326&lt;/span> &lt;span class="o">[&lt;/span>OK&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/minimal-notebook Minimal Jupyter Notebook Python Stack from h… &lt;span class="m">183&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/base-notebook Base image &lt;span class="k">for&lt;/span> Jupyter Notebook stacks from … &lt;span class="m">203&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-hub &lt;span class="m">22&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-network-tools &lt;span class="m">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/configurable-http-proxy node-http-proxy + REST API &lt;span class="m">6&lt;/span> &lt;span class="o">[&lt;/span>OK&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-singleuser-sample &lt;span class="m">10&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/nbviewer Jupyter Notebook Viewer &lt;span class="m">32&lt;/span> &lt;span class="o">[&lt;/span>OK&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/r-notebook R Jupyter Notebook Stack from https://github… &lt;span class="m">54&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-image-awaiter &lt;span class="m">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/repo2docker Turn git repositories into Jupyter enabled D… &lt;span class="m">21&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-secret-sync &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/jupyterhub-onbuild onbuild version of JupyterHub images &lt;span class="m">6&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bitnami/jupyter-base-notebook &lt;span class="m">39&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyter/demo &lt;span class="o">(&lt;/span>DEPRECATED&lt;span class="o">)&lt;/span> Demo of the IPython/Jupyter Not… &lt;span class="m">16&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-image-cleaner &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-binderhub &lt;span class="m">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jupyterhub/k8s-pre-puller &lt;span class="m">1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>参考官网： &lt;a class="link" href="https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html" target="_blank" rel="noopener"
+>https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html&lt;/a> 可以看到各个镜像的简要介绍&lt;/p>
+&lt;p>我选择了第一个： 包含来自科研科学类的Python生态系统的热门软件包
+&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img.png"
+width="1399"
+height="918"
+srcset="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_hu41b47653a947278cc973eb134d50d77f_105120_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_hu41b47653a947278cc973eb134d50d77f_105120_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="152"
+data-flex-basis="365px"
+>&lt;/p>
+&lt;p>编写docker-compose.yml.后期维护有记录：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;3.3&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">services&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">scipy-notebook&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jupyter/scipy-notebook:latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">container_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jupyter-notebook&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">tty&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">user&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">root&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">restart&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">always&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">ports&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="m">8899&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="m">8888&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">volumes&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="w"> &lt;/span>&lt;span class="l">${PWD}/.aws:/home/jovyan/.aws&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="w"> &lt;/span>&lt;span class="l">${PWD}/work:/home/jovyan/work&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">environment&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">REPOS=/home/jovyan/work/git&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">JUPYTER_TOKEN=********&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">JUPYTER_ENABLE_LAB=yes&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">NB_UID=1000&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c">#$(id -u)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">NB_GID=1000&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c">#(id -g)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>注意要 UID NB_GID 需要设置一下，属于linux 的用户组管理，会影响 Jupyter 服务器进程以及在容器内创建或挂载文件时的权限和所有权。&lt;br>
+我这里设置的我安装系统后创建的第一个用户，通过&lt;code>id&lt;/code>查看，不建议用root 用户，貌似会启动不起来。&lt;br>
+如果不设置就会报错：
+&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_1.png"
+width="623"
+height="86"
+srcset="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_1_hud8d02c82b8cd5921f8ec38089324489b_6071_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_1_hud8d02c82b8cd5921f8ec38089324489b_6071_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="724"
+data-flex-basis="1738px"
+>&lt;/p>
+&lt;p>启动命令：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">docker-compose -d
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>容器运行起来后宿主机的 &lt;code>${PWD}/work&lt;/code> 目录需要设置用户权限，我的这个目录是root 用户权限创建的其他用户不用进行创建文件的操作，需要使用&lt;code>chmod 777&lt;/code> 是其他用户组有读写权限：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">root@koala9527:/home/*****/my-project/jupyter-notebook# ls -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">总计 &lt;span class="m">8&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">-rw-r--r-- &lt;span class="m">1&lt;/span> root root &lt;span class="m">471&lt;/span> 7月 &lt;span class="m">2&lt;/span> 16:06 docker-compose.yml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">drwxr-xr-x &lt;span class="m">2&lt;/span> root root &lt;span class="m">4096&lt;/span> 7月 &lt;span class="m">2&lt;/span> 15:25 work
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@koala9527:/home/*****/my-project/jupyter-notebook# chmod &lt;span class="m">777&lt;/span> work/
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">root@koala9527:/home/*****/my-project/jupyter-notebook# ls -l
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">总计 &lt;span class="m">8&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">-rw-r--r-- &lt;span class="m">1&lt;/span> root root &lt;span class="m">471&lt;/span> 7月 &lt;span class="m">2&lt;/span> 16:06 docker-compose.yml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">drwxrwxrwx &lt;span class="m">2&lt;/span> root root &lt;span class="m">4096&lt;/span> 7月 &lt;span class="m">2&lt;/span> 15:25 work
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>通过内网访问:
+&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_2.png"
+width="1426"
+height="997"
+srcset="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_2_hu000593f6f1bb8d23f02b88dc61ef18da_48674_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_2_hu000593f6f1bb8d23f02b88dc61ef18da_48674_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="143"
+data-flex-basis="343px"
+>&lt;/p>
+&lt;h2 id="验证使用">验证使用：
+&lt;/h2>&lt;p>新建一个Notebook项目尝试运行：&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_3.png"
+width="935"
+height="283"
+srcset="https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_3_hud49a6608bb1a42ae3b84ab829acea071_13745_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AE%89%E8%A3%85jupyter-notebook/img_3_hud49a6608bb1a42ae3b84ab829acea071_13745_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="330"
+data-flex-basis="792px"
+>&lt;/p></description></item></channel></rss>

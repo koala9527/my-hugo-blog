@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Coze on Example Site</title><link>https://blog.tuwei.space/tags/coze/</link><description>Recent content in Coze on Example Site</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 22 Feb 2024 10:24:57 +0800</lastBuildDate><atom:link href="https://blog.tuwei.space/tags/coze/index.xml" rel="self" type="application/rss+xml"/><item><title>导入程序员论坛帖子评论,尝试用扣子 coze AI Bot 开发平台 总结一下</title><link>https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/</link><pubDate>Thu, 22 Feb 2024 10:24:57 +0800</pubDate><guid>https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/</guid><description>&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/title.png" alt="Featured image of post 导入程序员论坛帖子评论,尝试用扣子 coze AI Bot 开发平台 总结一下" />&lt;p>扣子（coze.cn） 国内版已经正式上线，过去了不到一个月的时间今天来用它尝试一下做一个AI机器人。&lt;/p>
+&lt;h1 id="数据来源整理">数据来源整理
+&lt;/h1>&lt;p>当然是著名的V站了，找到了一个公开的爬虫项目，看到一些数据&lt;/p>
+&lt;p>&lt;a class="link" href="https://github.com/oldshensheep/v2ex_scrapy" target="_blank" rel="noopener"
+>https://github.com/oldshensheep/v2ex_scrapy&lt;/a>&lt;/p>
+&lt;p>项目网站并下载releases:
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img.png"
+width="3097"
+height="1804"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_hu6346c94c0052494fafb7b52414c8d85a_245161_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_hu6346c94c0052494fafb7b52414c8d85a_245161_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img.png"
+class="gallery-image"
+data-flex-grow="171"
+data-flex-basis="412px"
+>&lt;/p>
+&lt;p>下载解压：
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_1.png"
+width="1093"
+height="187"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_1_hu23beb8f1617bb926ce21c640a09b3d29_8896_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_1_hu23beb8f1617bb926ce21c640a09b3d29_8896_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_1.png"
+class="gallery-image"
+data-flex-grow="584"
+data-flex-basis="1402px"
+>&lt;/p>
+&lt;p>使用Navicate 链接查看一下（无密码）：
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_2.png"
+width="823"
+height="1033"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_2_hu7cc1ae98637703bc9df1e5dd663907f2_25236_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_2_hu7cc1ae98637703bc9df1e5dd663907f2_25236_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_2.png"
+class="gallery-image"
+data-flex-grow="79"
+data-flex-basis="191px"
+>&lt;/p>
+&lt;p>评论表才是重要的内容
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_3.png"
+width="1173"
+height="309"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_3_hu6dde637819e8659eb122eeb02ede17d5_9752_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_3_hu6dde637819e8659eb122eeb02ede17d5_9752_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_3.png"
+class="gallery-image"
+data-flex-grow="379"
+data-flex-basis="911px"
+>&lt;/p>
+&lt;p>提前看了coze上传知识库的文件大小不能超过20M&lt;br>
+几番测试 需要筛选thank_count&amp;gt;4的内容导出的有17.4M，65193条记录&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;4&amp;#39;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="coze操作">coze操作
+&lt;/h1>&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_4.png"
+width="2160"
+height="1138"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_4_huf3255024b0622330251f0cc44a6e6ca0_425942_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_4_huf3255024b0622330251f0cc44a6e6ca0_425942_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_4.png"
+class="gallery-image"
+data-flex-grow="189"
+data-flex-basis="455px"
+>
+注册coze，创建Bot
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_5.png"
+width="3700"
+height="1635"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_5_hu13ecc416113ad5c30dc54bfaf310c3e9_597460_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_5_hu13ecc416113ad5c30dc54bfaf310c3e9_597460_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_5.png"
+class="gallery-image"
+data-flex-grow="226"
+data-flex-basis="543px"
+>&lt;/p>
+&lt;p>添加知识库
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_6.png"
+width="3784"
+height="1038"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_6_hu90f7da33f226e0218c183f5791a5c92c_83268_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_6_hu90f7da33f226e0218c183f5791a5c92c_83268_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_6.png"
+class="gallery-image"
+data-flex-grow="364"
+data-flex-basis="874px"
+>&lt;/p>
+&lt;p>创建知识库
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_7.png"
+width="1693"
+height="1291"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_7_hu80c44e599027efaeac2d93ebec1b1762_38615_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_7_hu80c44e599027efaeac2d93ebec1b1762_38615_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_7.png"
+class="gallery-image"
+data-flex-grow="131"
+data-flex-basis="314px"
+>&lt;/p>
+&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_13.png"
+width="850"
+height="759"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_13_hu77ce4cc99b8b3c8e517d5ee8b0849706_26392_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_13_hu77ce4cc99b8b3c8e517d5ee8b0849706_26392_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_13.png"
+class="gallery-image"
+data-flex-grow="111"
+data-flex-basis="268px"
+>&lt;/p>
+&lt;p>新增文档
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_9.png"
+width="3441"
+height="1554"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_9_hud72881224847c06158e29ed8b9b8d6f9_80835_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_9_hud72881224847c06158e29ed8b9b8d6f9_80835_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_9.png"
+class="gallery-image"
+data-flex-grow="221"
+data-flex-basis="531px"
+>
+（现在回头来看是可以上传10个文件的，每个文件不超过20m），先简单试一下吧
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_10.png"
+width="934"
+height="250"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_10_hud17b23a6d309f59db72c2b23e9c9358a_7248_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_10_hud17b23a6d309f59db72c2b23e9c9358a_7248_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_10.png"
+class="gallery-image"
+data-flex-grow="373"
+data-flex-basis="896px"
+>
+上传之后等待自动处理完毕
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_11.png"
+width="3504"
+height="739"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_11_hued86e38dbbcb30fec0c1720eb7b442f8_29629_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_11_hued86e38dbbcb30fec0c1720eb7b442f8_29629_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_11.png"
+class="gallery-image"
+data-flex-grow="474"
+data-flex-basis="1137px"
+>&lt;/p>
+&lt;p>报错了，分段过多
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_8.png"
+width="568"
+height="193"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_8_hu18d508279f7aea784afab9fd793a87ab_8569_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_8_hu18d508279f7aea784afab9fd793a87ab_8569_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_8.png"
+class="gallery-image"
+data-flex-grow="294"
+data-flex-basis="706px"
+>
+我才是一行一条数据有6w行，一个分段超过1w就不行，想了一下字符过短的语义可能分析不出来，查询的时候限制一下字符长度，thank_count调小一点，然后再分多个查询查询出多个文件看看
+调整成10个查询条件如下：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 10000;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 20000;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 30000;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 40000;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 50000;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 60000;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 70000;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 80000;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SELECT content FROM &amp;#34;main&amp;#34;.&amp;#34;comment&amp;#34; WHERE &amp;#34;thank_count&amp;#34; &amp;gt; &amp;#39;1&amp;#39; and LENGTH(content)&amp;gt;60 LIMIT 10000 OFFSET 90000;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>查询出的内容分成10分全部自动分段
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_14.png"
+width="3292"
+height="1447"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_14_huea70a9a9435d8ca692dff5db694d3cb0_76816_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_14_huea70a9a9435d8ca692dff5db694d3cb0_76816_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_14.png"
+class="gallery-image"
+data-flex-grow="227"
+data-flex-basis="546px"
+>
+内部报错，尝试自动自定义分段
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_15.png"
+width="585"
+height="162"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_15_hu929e40da95f3a00da8dadea7a40e986d_6292_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_15_hu929e40da95f3a00da8dadea7a40e986d_6292_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_15.png"
+class="gallery-image"
+data-flex-grow="361"
+data-flex-basis="866px"
+>
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_17.png"
+width="3283"
+height="849"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_17_hua965c10b84d76f6491a02309d8b22446_42896_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_17_hua965c10b84d76f6491a02309d8b22446_42896_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_17.png"
+class="gallery-image"
+data-flex-grow="386"
+data-flex-basis="928px"
+>
+然后全部启用
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_18.png"
+width="3501"
+height="1552"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_18_hu3be39d4fd387f30dc44addf128666f5f_102635_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_18_hu3be39d4fd387f30dc44addf128666f5f_102635_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_18.png"
+class="gallery-image"
+data-flex-grow="225"
+data-flex-basis="541px"
+>&lt;/p>
+&lt;p>回到创建的机器人这里，点开机器人添加知识库
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_19.png"
+width="3355"
+height="1020"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_19_hu07943599ed7fb4f8b374ea1cb7bdaae2_68530_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_19_hu07943599ed7fb4f8b374ea1cb7bdaae2_68530_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_19.png"
+class="gallery-image"
+data-flex-grow="328"
+data-flex-basis="789px"
+>
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_20.png"
+width="1704"
+height="496"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_20_hub30feee3af2cf3c54b1416282b4d028b_33875_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_20_hub30feee3af2cf3c54b1416282b4d028b_33875_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_20.png"
+class="gallery-image"
+data-flex-grow="343"
+data-flex-basis="824px"
+>&lt;/p>
+&lt;p>设置一下人设与回复逻辑：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-markdown" data-lang="markdown">&lt;span class="line">&lt;span class="cl">&lt;span class="gh"># 角色
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="gh">&lt;/span>你是一个功能强大的评论总结搜索助手，主要的功能就是根据知识库可以满足各种常见的问题。
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>最后发布
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_22.png"
+width="2629"
+height="1221"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_22_huc0be100e309b52d41cf28d7491828db9_84570_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_22_huc0be100e309b52d41cf28d7491828db9_84570_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_22.png"
+class="gallery-image"
+data-flex-grow="215"
+data-flex-basis="516px"
+>
+再次发布到商店
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_23.png"
+width="2610"
+height="1237"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_23_hud8c61c8c43f19a8950eb445b76d16cd3_85426_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_23_hud8c61c8c43f19a8950eb445b76d16cd3_85426_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_23.png"
+class="gallery-image"
+data-flex-grow="210"
+data-flex-basis="506px"
+>&lt;/p>
+&lt;h1 id="测试">测试
+&lt;/h1>&lt;p>&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_24.png"
+width="3486"
+height="1893"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_24_hu5e9b7c549f85e725b93e780b760f8850_332792_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_24_hu5e9b7c549f85e725b93e780b760f8850_332792_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_24.png"
+class="gallery-image"
+data-flex-grow="184"
+data-flex-basis="441px"
+>
+&lt;img src="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_25.png"
+width="1102"
+height="754"
+srcset="https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_25_huf517ee785d36d6b8294d167aba71ec36_134867_480x0_resize_box_3.png 480w, https://blog.tuwei.space/p/%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%91%98%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E8%AF%84%E8%AE%BA%E5%B0%9D%E8%AF%95%E7%94%A8%E6%89%A3%E5%AD%90-coze-ai-bot-%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B/img_25_huf517ee785d36d6b8294d167aba71ec36_134867_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="img_25.png"
+class="gallery-image"
+data-flex-grow="146"
+data-flex-basis="350px"
+>
+感觉效果不是很好，&lt;/p>
+&lt;p>尝试过导入到国外版的coze机器人里面，可以通过聊天可以直接问到一些详细具体的语料信息。&lt;/p>
+&lt;p>国内外机器人都上线了 大家可以自己来试一下或者有什么意见给到我呢？
+国内版 ：BotID: 7339025335163387942 &lt;a class="link" href="https://doubao.com/bot/rd0rttVE" target="_blank" rel="noopener"
+>https://doubao.com/bot/rd0rttVE&lt;/a>
+国外版：https://ciciai.com/bot/sygGSrXY&lt;/p></description></item></channel></rss>
