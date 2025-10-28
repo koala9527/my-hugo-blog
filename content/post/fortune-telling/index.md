@@ -45,11 +45,11 @@ categories: ["AI应用"]
 
 ## 1. 创建自定义插件
 在 Coze 工作台的“资源库”中创建插件。
-![alt text](image-2.png)
+![alt text](https://hatui.s3.bitiful.net/article/fortune-telling/image-2.png)
 
 ### 插件配置
 创建代码工具，通过 IDE 创建。
-![alt text](image.png)
+![alt text](https://hatui.s3.bitiful.net/article/fortune-telling/image.png)
 
 ```javascript
 import { Args } from '@/runtime';
@@ -68,7 +68,7 @@ export async function handler({ input, logger }: Args<Input>): Promise<any> {
 
 在元数据中填写代码变量含义与工具说明，便于大模型理解：
 
-![alt text](image-1.png)
+![alt text](https://hatui.s3.bitiful.net/article/fortune-telling/image-1.png)
 
 ## 2. 配置 Coze 智能体
 
@@ -86,7 +86,7 @@ export async function handler({ input, logger }: Args<Input>): Promise<any> {
 1. 点击"插件" → "添加插件"
 2. 选择"自定义插件"
 3. 选择刚才创建的 “通过农历日期获取星盘信息 / iztro” 插件
-![alt text](image-3.png)
+![alt text](https://hatui.s3.bitiful.net/article/fortune-telling/image-3.png)
 ### 设置人设与回复逻辑提示词
 
 ```markdown
@@ -107,11 +107,11 @@ export async function handler({ input, logger }: Args<Input>): Promise<any> {
 - 分析运势的内容需基于工具返回信息，不可随意编造。
 - 需按照要求的流程和格式进行回复。 
 ```
-![alt text](image-5.png)
+![alt text](https://hatui.s3.bitiful.net/article/fortune-telling/image-5.png)
 
 # 发布与测试
 
-![alt text](image-4.png)
+![alt text](https://hatui.s3.bitiful.net/article/fortune-telling/image-4.png)
 ## 测试智能体
 
 在 Coze 平台测试对话：
@@ -123,9 +123,9 @@ export async function handler({ input, logger }: Args<Input>): Promise<any> {
 
 **预期响应：**
 
-![alt text](image-8.png)
-![alt text](image-6.png)
-![alt text](image-7.png)
+![alt text](https://hatui.s3.bitiful.net/article/fortune-telling/image-8.png)
+![alt text](https://hatui.s3.bitiful.net/article/fortune-telling/image-6.png)
+![alt text](https://hatui.s3.bitiful.net/article/fortune-telling/image-7.png)
 
 # 总结
 Coze 商店地址：https://www.coze.cn/s/pOL8nINZpUg/
